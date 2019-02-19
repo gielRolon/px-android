@@ -62,6 +62,8 @@ public interface PayerInformation {
         void identificationDraw();
 
         void showInvalidCpfNumberErrorView();
+
+        void showInvalidCnpjNumberErrorView();
     }
 
     interface Actions {

@@ -253,6 +253,11 @@ public class PayerInformationActivity extends PXActivity<PayerInformationPresent
     }
 
     @Override
+    public void showInvalidCnpjNumberErrorView() {
+        setErrorView(getString(R.string.px_invalid_field));
+    }
+
+    @Override
     public void setName(final String identificationName) {
         mIdentificationTicketView.setIdentificationName(identificationName);
     }

@@ -122,10 +122,16 @@ import java.util.List;
     }
 
     public void saveIdentificationType(final IdentificationType identificationType) {
-        state.setIdentificationType(identificationType);
-        if (identificationType != null) {
-            state.getIdentification().setType(identificationType.getId());
-            getView().setIdentificationNumberRestrictions(identificationType.getType());
+        final IdentificationType mock = new IdentificationType();
+        mock.setId("CNPJ");
+        mock.setMaxLength(14);
+        mock.setMinLength(14);
+        mock.setType("CNPJ");
+        mock.setName("CNPJ");
+        state.setIdentificationType(mock);
+        if (mock != null) {
+            state.getIdentification().setType(mock.getId());
+            getView().setIdentificationNumberRestrictions(mock.getType());
         }
     }
 
@@ -159,6 +165,10 @@ import java.util.List;
         switch (e.getErrorCode()) {
         case InvalidFieldException.INVALID_CPF:
             getView().showInvalidCpfNumberErrorView();
+            getView().showErrorIdentificationNumber();
+            break;
+        case InvalidFieldException.INVALID_CNPJ:
+            getView().showInvalidCnpjNumberErrorView();
             getView().showErrorIdentificationNumber();
             break;
         case InvalidFieldException.INVALID_IDENTIFICATION_LENGHT:

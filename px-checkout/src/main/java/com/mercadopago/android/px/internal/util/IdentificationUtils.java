@@ -5,11 +5,13 @@ import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.Identification;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.exceptions.InvalidFieldException;
+import java.util.InputMismatchException;
 import java.util.regex.Pattern;
 
 public final class IdentificationUtils {
 
     private static final String CPF = "CPF";
+    private static final String CNPJ = "CNPJ";
 
     private static final int CPF_ALGORITHM_EXPECTED_LENGTH = 11;
     private static final int CPF_ALGORITHM_LAST_INDEX = CPF_ALGORITHM_EXPECTED_LENGTH - 1;
@@ -51,6 +53,8 @@ public final class IdentificationUtils {
             throw InvalidFieldException.createInvalidLengthException();
         } else if (identification.getType().equals(CPF)) {
             validateCpf(identification.getNumber());
+        } else if (identification.getType().equals(CNPJ)) {
+            isValidCnpj(identification.getNumber());
         }
     }
 
@@ -103,5 +107,83 @@ public final class IdentificationUtils {
         } else {
             throw InvalidFieldException.createInvalidCpfException();
         }
+    }
+
+    private static void isValidCnpj(@NonNull String cnpj) throws InvalidFieldException {
+
+        cnpj = removeSpecialCharacters(cnpj);
+
+        // Equal number sequences makes an invalid cnpj.
+        if (cnpj.equals("00000000000000") || cnpj.equals("11111111111111") || cnpj.equals("22222222222222") ||
+            cnpj.equals("33333333333333") || cnpj.equals("44444444444444") || cnpj.equals("55555555555555") ||
+            cnpj.equals("66666666666666") || cnpj.equals("77777777777777") || cnpj.equals("88888888888888") ||
+            cnpj.equals("99999999999999") || (cnpj.length() != 14)) {
+            throw new InvalidFieldException(InvalidFieldException.INVALID_CNPJ);
+        }
+
+        char dig13, dig14;
+        int sm, i, r, num, peso;
+
+        // Protect code from int conversion errors.
+        try {
+            // 1. Digit verification.
+            sm = 0;
+            peso = 2;
+            for (i = 11; i >= 0; i--) {
+                // Convert cnpj's i char into number.
+                num = (int) (cnpj.charAt(i) - 48);
+                sm = sm + (num * peso);
+                peso = peso + 1;
+                if (peso == 10) {
+                    peso = 2;
+                }
+            }
+
+            r = sm % 11;
+            if ((r == 0) || (r == 1)) {
+                dig13 = '0';
+            } else {
+                dig13 = (char) ((11 - r) + 48);
+            }
+
+            // 2. Digit verification.
+            sm = 0;
+            peso = 2;
+            for (i = 12; i >= 0; i--) {
+                num = (int) (cnpj.charAt(i) - 48);
+                sm = sm + (num * peso);
+                peso = peso + 1;
+                if (peso == 10) {
+                    peso = 2;
+                }
+            }
+
+            r = sm % 11;
+            if ((r == 0) || (r == 1)) {
+                dig14 = '0';
+            } else {
+                dig14 = (char) ((11 - r) + 48);
+            }
+
+            // Checks whether the calculated digits match the digits entered.
+            if (!((dig13 == cnpj.charAt(12)) && (dig14 == cnpj.charAt(13)))) {
+                throw new InvalidFieldException(InvalidFieldException.INVALID_CNPJ);
+            }
+        } catch (InputMismatchException e) {
+            throw new InvalidFieldException(InvalidFieldException.INVALID_CNPJ);
+        }
+    }
+
+    private static String removeSpecialCharacters(@NonNull String cnpj) {
+        if (cnpj.contains(".")) {
+            cnpj = cnpj.replace(".", "");
+        }
+        if (cnpj.contains("-")) {
+            cnpj = cnpj.replace("-", "");
+        }
+        if (cnpj.contains("/")) {
+            cnpj = cnpj.replace("/", "");
+        }
+        return cnpj;
     }
 }
