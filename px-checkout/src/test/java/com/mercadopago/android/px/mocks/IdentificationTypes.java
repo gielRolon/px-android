@@ -12,9 +12,12 @@ public class IdentificationTypes {
 
     private static final String TYPE = "number";
     private static final String CPF_ID = "CPF";
+    private static final String CNPJ_ID = "CNPJ";
     private static final String CPF_NAME = "CPF";
+    private static final String CNPJ_NAME = "CNPJ";
     private static final int CPF_INVALID_LENGTH = 10;
     private static final int CPF_VALID_LENGTH = 11;
+    private static final int CNPJ_VALID_LENGTH = 14;
     private static final String doNotFindIdentificationTypesException =
         "{\"message\":\"doesn't find identification types\",\"error\":\"identification types not found error\",\"cause\":[]}";
 
@@ -84,6 +87,17 @@ public class IdentificationTypes {
         identificationType.setMaxLength(CPF_INVALID_LENGTH);
         identificationType.setMinLength(CPF_INVALID_LENGTH);
         identificationType.setName(CPF_NAME);
+
+        return identificationType;
+    }
+
+    public static IdentificationType getIdentificationTypeCNPJ() {
+        IdentificationType identificationType = new IdentificationType();
+        identificationType.setType(TYPE);
+        identificationType.setId(CNPJ_ID);
+        identificationType.setMaxLength(CNPJ_VALID_LENGTH);
+        identificationType.setMinLength(CNPJ_VALID_LENGTH);
+        identificationType.setName(CNPJ_NAME);
 
         return identificationType;
     }

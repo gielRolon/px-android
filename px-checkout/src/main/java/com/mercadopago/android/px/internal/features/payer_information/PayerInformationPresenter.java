@@ -122,16 +122,10 @@ import java.util.List;
     }
 
     public void saveIdentificationType(final IdentificationType identificationType) {
-        final IdentificationType mock = new IdentificationType();
-        mock.setId("CNPJ");
-        mock.setMaxLength(14);
-        mock.setMinLength(14);
-        mock.setType("CNPJ");
-        mock.setName("CNPJ");
-        state.setIdentificationType(mock);
-        if (mock != null) {
-            state.getIdentification().setType(mock.getId());
-            getView().setIdentificationNumberRestrictions(mock.getType());
+        state.setIdentificationType(identificationType);
+        if (identificationType != null) {
+            state.getIdentification().setType(identificationType.getId());
+            getView().setIdentificationNumberRestrictions(identificationType.getType());
         }
     }
 

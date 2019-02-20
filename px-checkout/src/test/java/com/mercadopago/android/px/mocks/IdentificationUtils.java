@@ -11,6 +11,11 @@ public final class IdentificationUtils {
     private static final String INVALID_LENGTH_CPF_NUMBER = "1234567890";
     private static final String INVALID_EQUAL_NUMBERS_CPF = "00000000000";
 
+    private static final String IDENTIFICATION_TYPE_CNPJ = "CNPJ";
+    private static final String VALID_CNPJ_NUMBER = "52562249000194";
+    private static final String INVALID_CNPJ_NUMBER = "52562249000193";
+    private static final String INVALID_EQUAL_NUMBERS_CNPJ = "00000000000000";
+
     private IdentificationUtils() {
     }
 
@@ -50,6 +55,30 @@ public final class IdentificationUtils {
         Identification identification = new Identification();
         identification.setNumber(INVALID_EQUAL_NUMBERS_CPF);
         identification.setType(IDENTIFICATION_TYPE_CPF);
+
+        return identification;
+    }
+
+    public static Identification getIdentificationCNPJ() {
+        Identification identification = new Identification();
+        identification.setNumber(VALID_CNPJ_NUMBER);
+        identification.setType(IDENTIFICATION_TYPE_CNPJ);
+
+        return identification;
+    }
+
+    public static Identification getIdentificationWithInvalidCnpjNumber() {
+        Identification identification = new Identification();
+        identification.setNumber(INVALID_CNPJ_NUMBER);
+        identification.setType(IDENTIFICATION_TYPE_CNPJ);
+
+        return identification;
+    }
+
+    public static Identification getIdentificationWithInvalidEqualNumbersCnpj() {
+        Identification identification = new Identification();
+        identification.setNumber(INVALID_EQUAL_NUMBERS_CNPJ);
+        identification.setType(IDENTIFICATION_TYPE_CNPJ);
 
         return identification;
     }
