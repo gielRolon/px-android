@@ -17,6 +17,8 @@ public final class IdentificationUtils {
     private static final int CPF_ALGORITHM_LAST_INDEX = CPF_ALGORITHM_EXPECTED_LENGTH - 1;
     private static final int CPF_ALGORITHM_CHECK_DIGITS_INDEX = CPF_ALGORITHM_EXPECTED_LENGTH - 2;
 
+    private static final int CNPJ_ALGORITHM_EXPECTED_LENGTH = 14;
+
     private static final Pattern CPF_VALID_NUMBERS_PATTERN = Pattern.compile(
         "(?=^((?!((([0]{11})|([1]{11})|([2]{11})|([3]{11})|([4]{11})|([5]{11})|([6]{11})|([7]{11})|([8]{11})|([9]{11})))).)*$)([0-9]{11})");
 
@@ -113,6 +115,10 @@ public final class IdentificationUtils {
     }
 
     private static void validateCnpj(@NonNull final CharSequence cnpj) throws InvalidFieldException {
+        if (cnpj.length() != CNPJ_ALGORITHM_EXPECTED_LENGTH) {
+            return;
+        }
+
         if (CNPJ_VALID_NUMBERS_PATTERN.matcher(cnpj).matches()) {
             char cnpj_first_check_digit, cnpj_second_check_digit;
             int sum, i, r, num, weight;
