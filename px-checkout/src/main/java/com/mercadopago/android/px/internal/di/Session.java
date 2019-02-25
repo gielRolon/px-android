@@ -360,7 +360,7 @@ public final class Session extends ApplicationModule
     public IdentificationRepository getIdentificationRepository() {
         if (identificationRepository == null) {
             final com.mercadopago.android.px.internal.services.IdentificationService identificationService =
-                RetrofitUtil.getRetrofitClient(getContext())
+                RetrofitUtil.getRetrofitMockedClient(getContext())
                     .create(com.mercadopago.android.px.internal.services.IdentificationService.class);
             identificationRepository =
                 new IdentificationService(identificationService, getConfigurationModule().getPaymentSettings());
