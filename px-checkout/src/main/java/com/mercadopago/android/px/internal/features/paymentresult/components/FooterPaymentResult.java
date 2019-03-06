@@ -52,7 +52,8 @@ public class FooterPaymentResult extends CompactComponent<PaymentResult, ActionD
             } else if (Payment.StatusDetail.isBadFilled(props.getPaymentStatusDetail())) {
 
                 buttonAction =
-                    new Button.Props(context.getString(R.string.px_text_some_card_data_is_incorrect),
+                    new Button.Props(String.format(context.getString(R.string.px_text_some_card_data_is_incorrect),
+                        props.getPaymentData().getPaymentMethod().getName()),
                         new RecoverPaymentAction());
                 linkAction =
                     new Button.Props(context.getString(R.string.px_text_pay_with_other_method),
