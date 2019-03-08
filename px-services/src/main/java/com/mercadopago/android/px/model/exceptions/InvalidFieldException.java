@@ -23,6 +23,11 @@ public class InvalidFieldException extends Exception {
     }
 
     @NonNull
+    public static InvalidFieldException createInvalidCnpjException() {
+        return new InvalidFieldException(INVALID_CNPJ);
+    }
+
+    @NonNull
     public static InvalidFieldException createInvalidLengthException() {
         return new InvalidFieldException(INVALID_IDENTIFICATION_LENGHT);
     }

@@ -166,14 +166,14 @@ public final class IdentificationUtils {
 
                 // Checks whether the calculated digits match the digits entered.
                 if (!((cnpj_first_check_digit == cnpj.charAt(12)) && (cnpj_second_check_digit == cnpj.charAt(13)))) {
-                    throw new InvalidFieldException(InvalidFieldException.INVALID_CNPJ);
+                    throw InvalidFieldException.createInvalidCnpjException();
                 }
             } catch (InputMismatchException e) {
-                throw new InvalidFieldException(InvalidFieldException.INVALID_CNPJ);
+                throw InvalidFieldException.createInvalidCnpjException();
             }
         } else {
             // Equal number sequences makes an invalid cnpj.
-            throw new InvalidFieldException(InvalidFieldException.INVALID_CNPJ);
+            throw InvalidFieldException.createInvalidCnpjException();
         }
     }
 }
