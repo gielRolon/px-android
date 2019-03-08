@@ -21,12 +21,6 @@ public final class RetrofitUtil {
             DEFAULT_WRITE_TIMEOUT);
     }
 
-    public static Retrofit getRetrofitMockedClient(final Context context) {
-        return getRetrofit(context, "https://private-3e2078-identificationtypes.apiary-mock.com/",
-            DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT,
-            DEFAULT_WRITE_TIMEOUT);
-    }
-
     private static Retrofit getRetrofit(final Context mContext,
         final String baseUrl,
         final int connectTimeout,
