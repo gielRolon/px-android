@@ -18,7 +18,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // only on development
         if (!project.hasProperty('production')) {
-            resConfigs("en", "xxhdpi")
+            resConfigs("pt", "xxhdpi")
             aaptOptions.cruncherEnabled = false
         }
     }
