@@ -20,7 +20,7 @@ public final class InitData extends TrackingMapModel {
         checkoutPreferenceId = preferenceId;
         checkoutPreference = preference;
         escEnabled = advancedConfiguration.isEscEnabled();
-        expressEnabled = advancedConfiguration.isEscEnabled();
+        expressEnabled = advancedConfiguration.isExpressPaymentEnabled();
     }
 
     public static InitData from(@NonNull final PaymentSettingRepository paymentSettingRepository) {
