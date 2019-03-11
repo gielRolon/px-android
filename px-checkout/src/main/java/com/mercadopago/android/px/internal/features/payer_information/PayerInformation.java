@@ -47,7 +47,7 @@ public interface PayerInformation {
 
         void showMissingIdentificationTypesError();
 
-        void showInvalidIdentificationNumberErrorView();
+        void showInvalidLengthIdentificationNumberErrorView();
 
         void showInvalidIdentificationNameErrorView();
 
@@ -61,9 +61,7 @@ public interface PayerInformation {
 
         void identificationDraw();
 
-        void showInvalidCpfNumberErrorView();
-
-        void showInvalidCnpjNumberErrorView();
+        void showInvalidIdentificationNumberErrorView();
     }
 
     interface Actions {

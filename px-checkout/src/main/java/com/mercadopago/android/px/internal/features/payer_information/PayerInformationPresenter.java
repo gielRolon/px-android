@@ -157,15 +157,11 @@ import java.util.List;
 
     private void resolveInvalidFieldException(final InvalidFieldException e) {
         switch (e.getErrorCode()) {
-        case InvalidFieldException.INVALID_CPF:
-            getView().showInvalidCpfNumberErrorView();
-            getView().showErrorIdentificationNumber();
-            break;
-        case InvalidFieldException.INVALID_CNPJ:
-            getView().showInvalidCnpjNumberErrorView();
-            getView().showErrorIdentificationNumber();
-            break;
         case InvalidFieldException.INVALID_IDENTIFICATION_LENGHT:
+            getView().showInvalidLengthIdentificationNumberErrorView();
+            getView().showErrorIdentificationNumber();
+            break;
+        default:
             getView().showInvalidIdentificationNumberErrorView();
             getView().showErrorIdentificationNumber();
             break;

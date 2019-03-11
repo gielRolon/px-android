@@ -233,7 +233,7 @@ public class PayerInformationActivity extends PXActivity<PayerInformationPresent
     }
 
     @Override
-    public void showInvalidIdentificationNumberErrorView() {
+    public void showInvalidLengthIdentificationNumberErrorView() {
         setErrorView(getString(R.string.px_invalid_identification_number));
     }
 
@@ -248,12 +248,7 @@ public class PayerInformationActivity extends PXActivity<PayerInformationPresent
     }
 
     @Override
-    public void showInvalidCpfNumberErrorView() {
-        setErrorView(getString(R.string.px_invalid_field));
-    }
-
-    @Override
-    public void showInvalidCnpjNumberErrorView() {
+    public void showInvalidIdentificationNumberErrorView() {
         setErrorView(getString(R.string.px_invalid_field));
     }
 

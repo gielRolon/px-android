@@ -205,7 +205,7 @@ public class PayerInformationPresenterTest {
         presenter.validateIdentification();
 
         verify(view).hideProgressBar();
-        verify(view).showInvalidIdentificationNumberErrorView();
+        verify(view).showInvalidLengthIdentificationNumberErrorView();
         verify(view).showErrorIdentificationNumber();
         verifyNoMoreInteractions(view);
     }
@@ -240,13 +240,13 @@ public class PayerInformationPresenterTest {
         presenter.validateIdentification();
 
         verify(view).hideProgressBar();
-        verify(view).showInvalidCnpjNumberErrorView();
+        verify(view).showInvalidIdentificationNumberErrorView();
         verify(view).showErrorIdentificationNumber();
         verifyNoMoreInteractions(view);
     }
 
     @Test
-    public void whenNumberIsCnpjEqualNumbersThenSetInvalidCnpjNumberErrorView() {
+    public void whenNumberIsCnpjEqualNumbersThenShowInvalidIdentificationNumberErrorView() {
         final IdentificationType identificationType = IdentificationTypes.getIdentificationTypeCNPJ();
         final Identification identification = IdentificationUtils.getIdentificationWithInvalidEqualNumbersCnpj();
         when(stateModel.getIdentificationType()).thenReturn(identificationType);
@@ -257,7 +257,7 @@ public class PayerInformationPresenterTest {
         presenter.validateIdentification();
 
         verify(view).hideProgressBar();
-        verify(view).showInvalidCnpjNumberErrorView();
+        verify(view).showInvalidIdentificationNumberErrorView();
         verify(view).showErrorIdentificationNumber();
         verifyNoMoreInteractions(view);
     }
@@ -313,7 +313,7 @@ public class PayerInformationPresenterTest {
         presenter.validateIdentification();
 
         verify(view).hideProgressBar();
-        verify(view).showInvalidCpfNumberErrorView();
+        verify(view).showInvalidIdentificationNumberErrorView();
         verify(view).showErrorIdentificationNumber();
         verifyNoMoreInteractions(view);
     }
@@ -330,7 +330,7 @@ public class PayerInformationPresenterTest {
         presenter.validateIdentification();
 
         verify(view).hideProgressBar();
-        verify(view).showInvalidCpfNumberErrorView();
+        verify(view).showInvalidIdentificationNumberErrorView();
         verify(view).showErrorIdentificationNumber();
         verifyNoMoreInteractions(view);
     }
