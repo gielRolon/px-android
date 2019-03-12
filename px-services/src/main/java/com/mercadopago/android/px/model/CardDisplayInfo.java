@@ -14,6 +14,8 @@ public class CardDisplayInfo implements Parcelable, Serializable {
     public final long issuerId;
     public int[] cardPattern;
     public final String lastFourDigits;
+    public final String issuerImage;
+    public final String fontType;
     //public final String firstSixDigits;
 
     protected CardDisplayInfo(final Parcel in) {
@@ -24,8 +26,10 @@ public class CardDisplayInfo implements Parcelable, Serializable {
         issuerId = in.readLong();
         cardPattern = in.createIntArray();
         lastFourDigits = in.readString();
-        //firstSixDigits = in.readString();
         in.readIntArray(cardPattern);
+        issuerImage = in.readString();
+        fontType = in.readString();
+        //firstSixDigits = in.readString();
     }
 
     public static final Creator<CardDisplayInfo> CREATOR = new Creator<CardDisplayInfo>() {
@@ -54,8 +58,10 @@ public class CardDisplayInfo implements Parcelable, Serializable {
         dest.writeLong(issuerId);
         dest.writeIntArray(cardPattern);
         dest.writeString(lastFourDigits);
-        //dest.writeString(firstSixDigits);
         dest.writeIntArray(cardPattern);
+        dest.writeString(issuerImage);
+        dest.writeString(fontType);
+        //dest.writeString(firstSixDigits);
     }
 
     @NonNull

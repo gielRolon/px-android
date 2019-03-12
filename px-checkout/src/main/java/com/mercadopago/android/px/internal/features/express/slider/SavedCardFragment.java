@@ -54,14 +54,12 @@ public class SavedCardFragment extends PaymentMethodFragment {
 
 
     protected void setIssuerIcon(@NonNull final View view, @NonNull final SavedCardDrawableFragmentItem drawableCard) {
-        // TODO We will not show issuer in the first version
-//        final ImageView issuerIcon = view.findViewById(R.id.card_issuer_logo);
-//        // set issuer image
-//        final int issuerResource = ResourceUtil.getIssuerImage(view.getContext(), drawableCard.card.issuerId);
-//
-//        if (issuerResource > 0) {
-//            issuerIcon.setImageResource(issuerResource);
-//        }
+        final ImageView issuerIcon = view.findViewById(R.id.card_issuer_logo);
+        final int issuerResource = ResourceUtil.getCardIssuerImage(view.getContext(), drawableCard.card.issuerImage);
+
+        if (issuerResource > 0) {
+            issuerIcon.setImageResource(issuerResource);
+        }
     }
 
     private void setPaymentMethodIcon(@NonNull final View view,
