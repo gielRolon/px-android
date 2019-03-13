@@ -4,6 +4,7 @@ import android.content.Context;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.features.paymentresult.components.BodyError;
 import com.mercadopago.android.px.internal.features.paymentresult.props.BodyErrorProps;
+import com.mercadopago.android.px.internal.util.TextUtil;
 import com.mercadopago.android.px.internal.view.ActionDispatcher;
 import com.mercadopago.android.px.mocks.PaymentResults;
 import com.mercadopago.android.px.model.PaymentResult;
@@ -23,14 +24,13 @@ import static org.mockito.Mockito.when;
 public class BodyErrorTest {
 
     private static final String ERROR_TITLE = "error_title";
+    private static final String CALL_FOR_AUTH_ERROR_TITLE = "error_title";
     private static final String CONTINGENCY_DESCRIPTION = "contingency_description";
     private static final String REVIEW_MANUAL_DESCRIPTION = "review_manual_description";
     private static final String CALL_FOR_AUTH_DESCRIPTION = "call_for_auth_description";
-    private static final String INSUFFICIENT_AMOUNT_DESCRIPTION = "insufficient_amount_description";
-    private static final String INSUFFICIENT_AMOUNT_SECOND_DESCRIPTION = "insufficient_amount_second_description";
-    private static final String REJECTED_OTHER_REASON_DESCRIPTION = "rejected_other_reason_description";
     private static final String REJECTED_INSUFFICIENT_DATA = "insufficient_data_description";
     private static final String DUPLICATED_DESCRIPTION = "duplicated_description";
+    private static final String EMPTY_DESCRIPTION = TextUtil.EMPTY;
 
     @Mock private ActionDispatcher dispatcher;
     @Mock private Context context;
@@ -42,16 +42,10 @@ public class BodyErrorTest {
         when(context.getString(R.string.px_error_description_review_manual)).thenReturn(REVIEW_MANUAL_DESCRIPTION);
         when(context.getString(R.string.px_error_description_insufficient_data)).thenReturn(REJECTED_INSUFFICIENT_DATA);
         when(context.getString(R.string.px_what_can_do)).thenReturn(ERROR_TITLE);
+        when(context.getString(R.string.px_text_how_can_authorize)).thenReturn(CALL_FOR_AUTH_ERROR_TITLE);
         when(context.getString(R.string.px_error_description_call)).thenReturn(CALL_FOR_AUTH_DESCRIPTION);
-        when(context.getString(R.string.px_error_description_insufficient_amount))
-            .thenReturn(INSUFFICIENT_AMOUNT_DESCRIPTION);
-
-        when(context.getString(R.string.px_error_description_second_insufficient_amount))
-            .thenReturn(INSUFFICIENT_AMOUNT_SECOND_DESCRIPTION);
-        when(context.getString(R.string.px_error_description_other_reason))
-            .thenReturn(REJECTED_OTHER_REASON_DESCRIPTION);
-
         when(context.getString(R.string.px_error_description_duplicated_payment)).thenReturn(DUPLICATED_DESCRIPTION);
+
     }
 
     @Test
@@ -59,7 +53,7 @@ public class BodyErrorTest {
         final PaymentResult paymentResult = PaymentResults.getStatusCallForAuthPaymentResult();
         final BodyError bodyError = new BodyError(getBodyErrorProps(paymentResult), dispatcher);
 
-        assertEquals(ERROR_TITLE, bodyError.getTitle(context));
+        assertEquals(CALL_FOR_AUTH_ERROR_TITLE, bodyError.getTitle(context));
     }
 
     @Test
@@ -139,15 +133,7 @@ public class BodyErrorTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedInsufficientAmountPaymentResult();
         final BodyError bodyError = new BodyError(getBodyErrorProps(paymentResult), dispatcher);
 
-        assertEquals(INSUFFICIENT_AMOUNT_DESCRIPTION, bodyError.getDescription(context));
-    }
-
-    @Test
-    public void testBodyErrorSecondDescriptionForRejectedInsufficientAmount() {
-        final PaymentResult paymentResult = PaymentResults.getStatusRejectedInsufficientAmountPaymentResult();
-        final BodyError bodyError = new BodyError(getBodyErrorProps(paymentResult), dispatcher);
-
-        assertEquals(INSUFFICIENT_AMOUNT_SECOND_DESCRIPTION, bodyError.getSecondDescription(context));
+        assertEquals(EMPTY_DESCRIPTION, bodyError.getDescription(context));
     }
 
     @Test
@@ -155,7 +141,7 @@ public class BodyErrorTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedOtherPaymentResult();
         final BodyError bodyError = new BodyError(getBodyErrorProps(paymentResult), dispatcher);
 
-        assertEquals(REJECTED_OTHER_REASON_DESCRIPTION, bodyError.getDescription(context));
+        assertEquals(EMPTY_DESCRIPTION, bodyError.getDescription(context));
     }
 
     @Test
@@ -180,13 +166,6 @@ public class BodyErrorTest {
         final BodyError bodyError = new BodyError(getBodyErrorProps(paymentResult), dispatcher);
 
         assertEquals("", bodyError.getDescription(context));
-    }
-
-    @Test
-    public void testBodyErrorSecondDescriptionOnEmptyCase() {
-        final PaymentResult paymentResult = PaymentResults.getStatusRejectedBadFilledFormPaymentResult();
-        final BodyError bodyError = new BodyError(getBodyErrorProps(paymentResult), dispatcher);
-        assertEquals("", bodyError.getSecondDescription(context));
     }
 
     @Test

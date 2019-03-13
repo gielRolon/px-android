@@ -37,12 +37,6 @@ public class PaymentResultProps {
             .setProcessingMode(processingMode);
     }
 
-    public boolean isPluginPaymentResult(@Nullable final PaymentResult paymentResult) {
-        return paymentResult != null &&
-            (Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_PLUGIN_PM.equals(paymentResult.getPaymentStatusDetail())
-                ||
-                Payment.StatusDetail.STATUS_DETAIL_APPROVED_PLUGIN_PM.equals(paymentResult.getPaymentStatusDetail()));
-    }
 
     private boolean isStatusApproved() {
         return paymentResult != null && paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_APPROVED);

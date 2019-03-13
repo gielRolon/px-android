@@ -41,17 +41,6 @@
             android:textSize="@dimen/px_s_text"
             tools:text="Description"/>
 
-        <com.mercadopago.android.px.internal.view.MPTextView
-            android:id="@+id/paymentResultBodyErrorSecondDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/px_xs_margin"
-            android:gravity="center_horizontal"
-            android:textColor="@color/ui_meli_dark_grey"
-            android:textSize="@dimen/px_s_text"
-            tools:text="Description"/>
-
         <com.mercadolibre.android.ui.widgets.MeliButton
             android:id="@+id/paymentResultBodyErrorAction"
             android:layout_width="match_parent"

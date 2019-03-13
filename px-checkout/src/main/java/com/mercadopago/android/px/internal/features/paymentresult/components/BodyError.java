@@ -2,6 +2,7 @@ package com.mercadopago.android.px.internal.features.paymentresult.components;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.features.paymentresult.props.BodyErrorProps;
 import com.mercadopago.android.px.internal.util.TextUtil;
@@ -18,6 +19,9 @@ public class BodyError extends Component<BodyErrorProps, Void> {
     }
 
     public String getTitle(final Context context) {
+        if (isCallForAuthorize()) {
+            return context.getString(R.string.px_text_how_can_authorize);
+        }
         if (isRejectedWithTitle() || isPendingWithTitle()) {
             return context.getString(R.string.px_what_can_do);
         }
@@ -54,10 +58,6 @@ public class BodyError extends Component<BodyErrorProps, Void> {
             return context.getString(R.string.px_error_description_call);
         case Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_CARD_DISABLED:
             return context.getString(R.string.px_error_description_card_disabled, props.paymentMethodName);
-        case Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_INSUFFICIENT_AMOUNT:
-            return context.getString(R.string.px_error_description_insufficient_amount);
-        case Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_OTHER_REASON:
-            return context.getString(R.string.px_error_description_other_reason);
         case Payment.StatusDetail.STATUS_DETAIL_REJECTED_REJECTED_BY_BANK:
             return context.getString(R.string.px_error_description_by_bank);
         case Payment.StatusDetail.STATUS_DETAIL_REJECTED_REJECTED_INSUFFICIENT_DATA:
@@ -73,14 +73,6 @@ public class BodyError extends Component<BodyErrorProps, Void> {
         default:
             return TextUtil.EMPTY;
         }
-    }
-
-    public String getSecondDescription(final Context context) {
-        if (props.status.equals(Payment.StatusCodes.STATUS_REJECTED) &&
-            props.statusDetail.equals(Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_INSUFFICIENT_AMOUNT)) {
-            return context.getString(R.string.px_error_description_second_insufficient_amount);
-        }
-        return TextUtil.EMPTY;
     }
 
     private boolean isRejectedWithTitle() {

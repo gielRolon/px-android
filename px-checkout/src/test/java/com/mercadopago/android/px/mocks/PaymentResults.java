@@ -1,6 +1,7 @@
 package com.mercadopago.android.px.mocks;
 
 import com.mercadopago.android.px.internal.util.JsonUtil;
+import com.mercadopago.android.px.internal.util.ResourceUtil;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.utils.ResourcesUtil;
 
@@ -76,6 +77,16 @@ public class PaymentResults {
 
     public static PaymentResult getBoletoRejectedPaymentResult() {
         String json = ResourcesUtil.getStringResource("payment_result_rejected_boleto.json");
+        return JsonUtil.getInstance().fromJson(json, PaymentResult.class);
+    }
+
+    public static PaymentResult getStatusRejectedBlacklist() {
+        String json = ResourcesUtil.getStringResource("payment_rejected_blacklist.json");
+        return JsonUtil.getInstance().fromJson(json, PaymentResult.class);
+    }
+
+    public static PaymentResult getStatusRejectedFraud() {
+        String json = ResourcesUtil.getStringResource("payment_rejected_fraud.json");
         return JsonUtil.getInstance().fromJson(json, PaymentResult.class);
     }
 }
