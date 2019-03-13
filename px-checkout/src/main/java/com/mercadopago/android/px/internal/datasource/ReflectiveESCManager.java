@@ -11,7 +11,7 @@ public final class ReflectiveESCManager implements IESCManager {
 
     private static final class EscManagerNames {
         private static final String FACTORY_METHOD = "create";
-        private static final String CLASS_NAME = "ESCManager";
+        private static final String CLASS_NAME = "com.mercadopago.ml_esc_manager.ESCManager";
         private static final String METHOD_GET_SAVED_CARD_IDS = "getSavedCardIds";
         private static final String METHOD_SAVE_ESC_WITH = "saveESCWith";
         private static final String METHOD_DELETE_ESC_WITH = "deleteESCWith";
