@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.reflect.Method;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 
 public final class ReflectiveESCManager implements IESCManager {
@@ -56,9 +56,8 @@ public final class ReflectiveESCManager implements IESCManager {
     public String getESC(@Nullable final String cardId, @NonNull final String firstDigits,
         @NonNull final String lastDigits) {
         try {
-            if (escEnabled && escManagerInstance != null) {
-                final Method getMethod =
-                    escManagerInstance.getClass()
+            if (allowOperate()) {
+                final Method getMethod = escManagerInstance.getClass()
                         .getMethod(EscManagerNames.METHOD_GET_ESC, String.class, String.class, String.class);
                 return (String) getMethod.invoke(escManagerInstance, cardId, firstDigits, lastDigits);
             }
@@ -82,9 +81,8 @@ public final class ReflectiveESCManager implements IESCManager {
 
     private boolean save(final String... args) {
         try {
-            if (escEnabled && escManagerInstance != null) {
-                final Method saveMethod =
-                    escManagerInstance.getClass()
+            if (allowOperate()) {
+                final Method saveMethod = escManagerInstance.getClass()
                         .getMethod(EscManagerNames.METHOD_SAVE_ESC_WITH, createClassesParams(args));
                 final Object wasSaved = saveMethod.invoke(escManagerInstance, args);
                 return (Boolean) wasSaved;
@@ -108,7 +106,7 @@ public final class ReflectiveESCManager implements IESCManager {
 
     private void delete(@NonNull final String... args) {
         try {
-            if (escEnabled && escManagerInstance != null) {
+            if (allowOperate()) {
                 final Method deleteMethod =
                     escManagerInstance.getClass()
                         .getMethod(EscManagerNames.METHOD_DELETE_ESC_WITH, createClassesParams(args));
@@ -129,21 +127,21 @@ public final class ReflectiveESCManager implements IESCManager {
 
     @Override
     public Set<String> getESCCardIds() {
-
-        final Set<String> cardIds = new HashSet<>();
-        if (escEnabled) {
-            try {
-
-                if (escManagerInstance != null) {
+        try {
+            if (allowOperate()) {
                     final Method getAllMethod =
                         escManagerInstance.getClass().getMethod(EscManagerNames.METHOD_GET_SAVED_CARD_IDS);
                     final Object objects = getAllMethod.invoke(escManagerInstance);
                     return (Set<String>) objects;
-                }
-            } catch (final Exception e) {
-                return cardIds;
+            } else {
+                return Collections.emptySet();
             }
+        } catch (final Exception e) {
+            return Collections.emptySet();
         }
-        return cardIds;
+    }
+
+    private boolean allowOperate() {
+        return escEnabled && escManagerInstance != null;
     }
 }
