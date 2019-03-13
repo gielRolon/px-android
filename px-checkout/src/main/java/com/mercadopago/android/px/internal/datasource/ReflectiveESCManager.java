@@ -40,7 +40,7 @@ public final class ReflectiveESCManager implements IESCManager {
         try {
             final Class escManagerClass = Class.forName(EscManagerNames.CLASS_NAME);
             final Method factoryMethod = escManagerClass.getMethod(EscManagerNames.FACTORY_METHOD, Context.class);
-            return factoryMethod.invoke(appContext);
+            return factoryMethod.invoke(null, appContext);
         } catch (final Exception e) {
             return null;
         }
