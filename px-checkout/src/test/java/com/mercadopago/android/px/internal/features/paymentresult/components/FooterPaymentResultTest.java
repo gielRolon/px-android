@@ -27,6 +27,7 @@ public class FooterPaymentResultTest {
 
     private static final String LABEL_CONTINUE = "Continue";
     private static final String LABEL_CHANGE = "Change payment method";
+    private static final String LABEL_ALREADY_AUTHORIZED = "Already authorized";
     private static final String LABEL_REVIEW_TC_INFO = "REVIEW INFO";
 
     @Mock private Context context;
@@ -83,17 +84,18 @@ public class FooterPaymentResultTest {
 
     @Test
     public void testRejectedCallForAuth() {
-        when(context.getString(R.string.px_text_pay_with_other_method)).thenReturn(LABEL_CHANGE);
+        when(context.getString(R.string.px_text_authorized_call_for_authorize)).thenReturn(LABEL_ALREADY_AUTHORIZED);
         final PaymentResult paymentResult = PaymentResults.getStatusCallForAuthPaymentResult();
         final FooterPaymentResult footerPaymentResult = new FooterPaymentResult(paymentResult, actionDispatcher);
         final Footer.Props props = footerPaymentResult.getFooterProps(context);
 
         assertNotNull(props);
         assertNotNull(props.buttonAction);
-        assertEquals(LABEL_CHANGE, props.buttonAction.label);
+        assertEquals(LABEL_ALREADY_AUTHORIZED, props.buttonAction.label);
         assertNotNull(props.buttonAction.action);
-        assertTrue(props.buttonAction.action instanceof ChangePaymentMethodAction);
-        assertNull(props.linkAction);
+        assertTrue(props.buttonAction.action instanceof RecoverPaymentAction);
+        assertNotNull(props.linkAction);
+        assertTrue(LABEL_CHANGE, props.linkAction.action instanceof ChangePaymentMethodAction);
     }
 
     @Test

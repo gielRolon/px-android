@@ -98,39 +98,39 @@
     <string name="px_copied_to_clipboard_ack">Pronto! Copiado.</string>
 
     <!-- CallForAuthorize -->
-    <string name="px_title_activity_call_for_authorize">Você deve autorizar com %1$s o pagamento de %2$s ao Mercado Pago</string>
-    <string name="px_text_authorized_call_for_authorize">Já falei com %1$s e autorizei</string>
+    <string name="px_title_activity_call_for_authorize">Seu cartão não autorizou o pagamento</string>
+    <string name="px_text_authorized_call_for_authorize">Já autorizei o pagamento</string>
 
     <!-- Pending -->
-    <string name="px_title_pending_payment">Estamos processando o pagamento</string>
-    <string name="px_error_description_contingency">Em algumas horas te avisaremos por e-mail se foi aprovado.</string>
+    <string name="px_title_pending_payment">Estamos processando seu pagamento</string>
+    <string name="px_error_description_contingency">Não se preocupe, avisaremos por e-mail em algumas horas se foi aprovado.</string>
     <string name="px_error_description_review_manual">Dentro das próximas 24 horas te avisaremos por e-mail se foi aprovado.</string>
     <string name="px_pending_label">Depressa para pagar!</string>
 
     <!-- Rejection -->
     <string name="px_text_pay_with_other_method">Alterar o meio de pagamento</string>
-    <string name="px_title_other_reason_rejection">%1$s não processou o pagamento</string>
-    <string name="px_title_bad_filled_other">Ops! Não foi possível processar o seu pagamento</string>
-    <string name="px_text_some_card_data_is_incorrect">Qualquer dado de seu %1$s é incorreto</string>
-    <string name="px_text_insufficient_amount">O seu %1$s não possui saldo suficiente</string>
-    <string name="px_text_active_card">Ligue para %1$s e desbloqueie o seu cartão</string>
-    <string name="px_title_rejection_high_risk">Por segurança, foi necessário recusar o seu pagamento</string>
-    <string name="px_title_rejection_max_attempts">Você chegou ao limite de tentativas permitidas com este cartão</string>
+    <string name="px_title_other_reason_rejection">Não foi possível processar o seu pagamento</string>
+    <string name="px_title_duplicated_reason_rejection">Desculpe, o pagamento foi feito duas vezes, por isso recusamos a segunda vez</string>
+    <string name="px_title_bad_filled_other">Algum dado do cartão está incorreto</string>
+    <string name="px_text_how_can_authorize">Como o autorizo?</string>
+    <string name="px_text_some_card_data_is_incorrect">Algum dado do cartão está incorreto</string>
+    <string name="px_text_insufficient_amount">Não há limite suficiente no seu cartão</string>
+    <string name="px_text_active_card">Seu cartão não está desbloqueado</string>
+    <string name="px_title_rejection_high_risk">Recusamos seu pagamento</string>
+    <string name="px_title_rejection_max_attempts">Recusamos o pagamento porque você atingiu o limite de tentativas</string>
+    <string name="px_title_rejection_blacklist">Recusamos seu pagamento com este cartão</string>
+    <string name="px_title_rejection_fraud">Você está suspenso para pagar</string>
     <string name="px_rejection_label">Algo deu errado…</string>
     <string name="px_text_card_data_invalid">Revisar os dados do cartão</string>
-
-    <string name="px_error_description_call">O telefone do banco está no verso do seu cartão.</string>
-    <string name="px_error_description_card_disabled">Use outro meio de pagamento ou ligue para %1$s e desbloqueie o cartão.</string>
-    <string name="px_error_description_insufficient_amount">Não se preocupe! Recarregue-o em qualquer banco ou pelo Internet Banking e tente novamente.</string>
-    <string name="px_error_description_second_insufficient_amount">Se preferir, você pode escolher outro meio de pagamento.</string>
+    <string name="px_error_description_call">1- Ligue para o telefone no verso do seu cartão para autorizar o pagamento para o Mercado Pago. \n 2- Por favor, avise-nos para que possamos creditá-lo.</string>
+    <string name="px_error_description_card_disabled">Ligue para o %1$s para desbloquear seu cartão ou use outro meio de pagamento.</string>
     <string name="px_error_description_other_reason">Use outro cartão ou outro meio de pagamento.</string>
     <string name="px_error_description_by_bank">Por favor, tente pagar de outra forma.</string>
     <string name="px_error_description_insufficient_data">Por favor, tente pagar de outra forma.</string>
-    <string name="px_error_description_duplicated_payment">Não se preocupe! O seu pagamento foi efetuado com sucesso</string>
-    <string name="px_error_description_max_attempts">Como você chegou no limite de tentativas com este cartão, use outro meio de pagamento.</string>
-    <string name="px_error_description_high_risk">Use um meio de pagamento diferente de cartão.</string>
-    <string name="px_error_secondary_title_call">Não conseguiu autorizá-lo?</string>
-    <string name="px_error_description_rejected_by_regulations">Você possui dados pendentes para atualizar. Para pagar com dinheiro em conta, você deve preencher os dados faltantes.</string>
+    <string name="px_error_description_duplicated_payment">Não se preocupe, cobramos somente o primeiro pagamento.</string>
+    <string name="px_error_description_max_attempts">Como você atingiu o limite de tentativas com este cartão, por favor, use outro meio de pagamento.</string>
+    <string name="px_error_description_high_risk">Tente pagar com outro meio.</string>
+    <string name="px_error_description_rejected_by_regulations">Para pagar com dinheiro em conta, você deve preencher os dados faltantes.</string>
     <string name="px_text_card_enabled">Eu já habilitei meu cartão</string>
 
     <!-- Error messages -->
@@ -138,8 +138,8 @@
     <string name="px_error_message_expired_preference">Preferência expirada</string>
     <string name="px_error_message_inactive_preference">Preferência inativa</string>
     <string name="px_error_message_excluded_all_payment_type">Todos os tipos de pagamentos foram excluídos</string>
-    <string name="px_error_message_invalid_installments">Número do parcelas inválido</string>
-    <string name="px_error_title">Ops! Algo deu errado</string>
+    <string name="px_error_message_invalid_installments">Seu cartão não permite este número de parcelas</string>
+    <string name="px_error_title">Ocorreu um erro…</string>
     <string name="px_standard_error_message">Estamos trabalhando para solucionar o problema. Por favor, tente novamente mais tarde.</string>
     <string name="px_error_message_email_required">O e-mail é obrigatório</string>
     <string name="px_error_message_missing_payer_cost">Nenhuma parcela encontrada</string>
@@ -183,6 +183,7 @@
     <string name="px_instant_accreditation_time">É aprovado imediatamente</string>
     <string name="px_accreditation_time">Será aprovado em</string>
     <string name="px_what_can_do">O que eu posso fazer?</string>
+    <string name="px_got_it">Entendi</string>
 
     <!-- Low Res -->
     <string name="px_form_card_title_payment_type">Cartão de %1$s</string>

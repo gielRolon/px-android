@@ -25,7 +25,7 @@ public class PaymentResultRenderer extends Renderer<PaymentResultContainer> {
 
             final ViewGroup parentViewGroup = view.findViewById(R.id.mpsdkPaymentResultContainer);
 
-            final Header headerComponent = component.getHeaderComponent();
+            final Header headerComponent = component.getHeaderComponent(context);
 
             ViewUtils.addCancelToolbar(parentViewGroup, headerComponent.props.background);
 

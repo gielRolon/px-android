@@ -25,8 +25,8 @@ public final class PaymentUtils {
     @NonNull
     public static GenericPayment getGenericPaymentApproved() {
         return new GenericPayment.Builder(
-            Payment.StatusCodes.STATUS_APPROVED,
-            Payment.StatusDetail.STATUS_DETAIL_ACCREDITED
+            Payment.StatusCodes.STATUS_REJECTED,
+            Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE
         ).setPaymentId(123L).createGenericPayment();
     }
 }

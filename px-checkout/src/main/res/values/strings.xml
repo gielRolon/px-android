@@ -107,37 +107,38 @@
     <string name="px_copied_to_clipboard_ack">Done! Copied.</string>
 
     <!-- CallForAuthorize -->
-    <string name="px_title_activity_call_for_authorize">You must authorize with %1$s the payment of %2$s to Mercado Pago</string>
-    <string name="px_text_authorized_call_for_authorize">Already talked with %1$s and I am authorized</string>
+    <string name="px_title_activity_call_for_authorize">Your card did not authorize the payment</string>
+    <string name="px_text_authorized_call_for_authorize">I already authorized the payment</string>
 
     <!-- Pending -->
     <string name="px_title_pending_payment">We are processing the payment</string>
-    <string name="px_error_description_contingency">In a few hours we will notify you via e-mail if it is accredited.</string>
-    <string name="px_error_description_review_manual">Within the next 24 hours we will notify you via e-mail if it was accredited.</string>
+    <string name="px_error_description_contingency">Don\'t worry, in a few hours we will notify you via e-mail if it is accredited.</string>
+    <string name="px_error_description_review_manual">Don\'t worry, within the next 24 hours we will notify you via e-mail if it was accredited.</string>
     <string name="px_pending_label">Hurry to pay!</string>
 
     <!-- Rejection -->
     <string name="px_text_pay_with_other_method">Change payment method</string>
-    <string name="px_title_other_reason_rejection">%1$s did not process the payment</string>
-    <string name="px_title_bad_filled_other">Oops, we could not process your payment</string>
-    <string name="px_text_some_card_data_is_incorrect">Any datum of your %1$s is incorrect</string>
-    <string name="px_text_insufficient_amount">Yours %1$s has insufficient funds</string>
-    <string name="px_text_active_card">Calls to %1$s for activate your card</string>
-    <string name="px_title_rejection_high_risk">For security reasons, we had to reject your payment</string>
-    <string name="px_title_rejection_max_attempts">You reached the limit of attempts allowed</string>
+    <string name="px_title_other_reason_rejection">We could not process your payment</string>
+    <string name="px_title_duplicated_reason_rejection">We are sorry, the payment was made twice, therefore we rejected the second one.</string>
+    <string name="px_title_bad_filled_other">One of the card\'s details is invalid</string>
+    <string name="px_text_how_can_authorize">How do I authorize it?</string>
+    <string name="px_text_some_card_data_is_incorrect">One of the card\'s details is invalid</string>
+    <string name="px_text_insufficient_amount">Your card does not have sufficient funds</string>
+    <string name="px_text_active_card">Your card is not activated</string>
+    <string name="px_title_rejection_high_risk">We rejected your payment</string>
+    <string name="px_title_rejection_max_attempts">We rejected this payment because you reached the limit of attempts</string>
+    <string name="px_title_rejection_blacklist">We rejected the payment with this card</string>
+    <string name="px_title_rejection_fraud">You are suspended for payments</string>
     <string name="px_rejection_label">Something went wrong…</string>
-    <string name="px_error_secondary_title_call">Could not authorize it?</string>
-    <string name="px_error_description_call">The phone number is on the back of your card.</string>
-    <string name="px_error_description_card_disabled">Use another payment method or call %1$s to activate your card.</string>
-    <string name="px_error_description_insufficient_amount">Do not be discouraged! Recharge it in any bank or from your internet banking and try again.</string>
-    <string name="px_error_description_second_insufficient_amount">Or if you prefer, you can choose another payment method.</string>
+    <string name="px_error_description_call">1- Call the phone number on the back of your card to authorize the payment to Mercado Pago. \n 2- Please let us know so that we can credit it.</string>
+    <string name="px_error_description_card_disabled">Call %1$s to activate your card or use a different payment method</string>
     <string name="px_error_description_other_reason">Use another card or other payment method.</string>
     <string name="px_error_description_by_bank">Please try to pay with other payment method.</string>
     <string name="px_error_description_insufficient_data">Please try to pay with other payment method.</string>
-    <string name="px_error_description_duplicated_payment">Don\'t worry, your previous payment was approved.</string>
-    <string name="px_error_description_max_attempts">As you reached the limit of attempts with this card, use another payment method.</string>
-    <string name="px_error_description_high_risk">Use a payment method other than a card.</string>
-    <string name="px_error_description_rejected_by_regulations">You have pending data to update. To pay with Mercado Pago\'s money you must complete the missing data.</string>
+    <string name="px_error_description_duplicated_payment">Don\'t worry, we only charged you for the first payment.</string>
+    <string name="px_error_description_max_attempts">Because you have reached the limit of attempts, please use a different payment method.</string>
+    <string name="px_error_description_high_risk">Try paying with a different payment method.</string>
+    <string name="px_error_description_rejected_by_regulations">To pay with account money you must complete the missing details.</string>
     <string name="px_text_card_data_invalid">Review card data</string>
     <string name="px_text_card_enabled">I already enabled my card</string>
 
@@ -146,8 +147,8 @@
     <string name="px_error_message_expired_preference">Expired preference</string>
     <string name="px_error_message_inactive_preference">Inactive preference</string>
     <string name="px_error_message_excluded_all_payment_type">All payments types excluded</string>
-    <string name="px_error_message_invalid_installments">Invalid installments number</string>
-    <string name="px_error_title">Oops! Something went wrong</string>
+    <string name="px_error_message_invalid_installments">Your card does not accept this number of installments</string>
+    <string name="px_error_title">Something went wrong…</string>
     <string name="px_standard_error_message">We are going to fix it. Try later.</string>
     <string name="px_error_message_email_required">Email is required</string>
     <string name="px_error_message_missing_payer_cost">No installments found</string>
@@ -204,6 +205,7 @@
     <string name="px_instant_accreditation_time">Will be accredited instantly</string>
     <string name="px_accreditation_time">Will be accredited in</string>
     <string name="px_what_can_do">What can I do?</string>
+    <string name="px_got_it">Got it</string>
 
     <!-- Review and Confirm -->
     <string name="px_change_payment">Change payment method</string>

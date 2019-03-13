@@ -1,5 +1,6 @@
 package com.mercadopago.android.px.internal.features.paymentresult;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.configuration.PaymentResultScreenConfiguration;
@@ -17,10 +18,14 @@ import com.mercadopago.android.px.model.PaymentResult;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class PaymentResultContainerTest {
 
     private static final String CURRENCY_ID = "ARS";
@@ -34,24 +39,28 @@ public class PaymentResultContainerTest {
     private final static String EMPTY_TITLE = "empty title";
     private final static String PENDING_LABEL = "pending label";
     private final static String REJECTION_LABEL = "rejection label";
+    private final static String REJECTED_BLACKLIST = "rejected_blacklist";
+    private final static String REJECTED_FRAUD = "rejected_fraud";
 
     private ActionDispatcher dispatcher;
-    private PaymentResultProvider paymentResultProvider;
+
+    @Mock
+    private Context context;
 
     @Before
     public void setup() {
         dispatcher = mock(ActionDispatcher.class);
-        paymentResultProvider = mock(PaymentResultProvider.class);
 
-        when(paymentResultProvider.getApprovedTitle()).thenReturn(APPROVED_TITLE);
-        when(paymentResultProvider.getPendingTitle()).thenReturn(PENDING_TITLE);
-        when(paymentResultProvider.getRejectedOtherReasonTitle("Mastercard")).thenReturn(REJECTED_OTHER_REASON_TITLE);
-        when(paymentResultProvider.getRejectedInsufficientAmountTitle("Mastercard"))
-            .thenReturn(REJECTED_INSUFFICIENT_AMOUNT_TITLE);
-        when(paymentResultProvider.getRejectedBadFilledCardTitle()).thenReturn(REJECTED_BAD_FILLED_TITLE);
-        when(paymentResultProvider.getRejectedCallForAuthorizeTitle()).thenReturn(REJECTED_CALL_FOR_AUTH_TITLE);
-        when(paymentResultProvider.getPendingLabel()).thenReturn(PENDING_LABEL);
-        when(paymentResultProvider.getRejectionLabel()).thenReturn(REJECTION_LABEL);
+        when(context.getString(R.string.px_title_approved_payment)).thenReturn(APPROVED_TITLE);
+        when(context.getString(R.string.px_title_pending_payment)).thenReturn(PENDING_TITLE);
+        when(context.getString(R.string.px_title_other_reason_rejection)).thenReturn(REJECTED_OTHER_REASON_TITLE);
+        when(context.getString(R.string.px_text_insufficient_amount)).thenReturn(REJECTED_INSUFFICIENT_AMOUNT_TITLE);
+        when(context.getString(R.string.px_text_some_card_data_is_incorrect)).thenReturn(REJECTED_BAD_FILLED_TITLE);
+        when(context.getString(R.string.px_title_activity_call_for_authorize)).thenReturn(REJECTED_CALL_FOR_AUTH_TITLE);
+        when(context.getString(R.string.px_title_pending_payment)).thenReturn(PENDING_LABEL);
+        when(context.getString(R.string.px_rejection_label)).thenReturn(REJECTION_LABEL);
+        when(context.getString(R.string.px_title_rejection_blacklist)).thenReturn(REJECTED_BLACKLIST);
+        when(context.getString(R.string.px_title_rejection_fraud)).thenReturn(REJECTED_FRAUD);
     }
 
     @Test
@@ -400,7 +409,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusApprovedPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.title, paymentResultProvider.getApprovedTitle());
+        Assert.assertEquals(headerProps.title, context.getString(R.string.px_title_approved_payment));
     }
 
     @Test
@@ -408,7 +417,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusInProcessContingencyPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.title, paymentResultProvider.getPendingTitle());
+        Assert.assertEquals(headerProps.title, context.getString(R.string.px_title_pending_payment));
     }
 
     @Test
@@ -417,7 +426,7 @@ public class PaymentResultContainerTest {
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
         Assert.assertEquals(paymentResult.getPaymentData().getPaymentMethod().getName(), "Mastercard");
-        Assert.assertEquals(headerProps.title, paymentResultProvider.getRejectedOtherReasonTitle("Mastercard"));
+        Assert.assertEquals(headerProps.title, context.getString(R.string.px_title_other_reason_rejection));
     }
 
     @Test
@@ -426,7 +435,7 @@ public class PaymentResultContainerTest {
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
         Assert.assertEquals(paymentResult.getPaymentData().getPaymentMethod().getName(), "Mastercard");
-        Assert.assertEquals(headerProps.title, paymentResultProvider.getRejectedInsufficientAmountTitle("Mastercard"));
+        Assert.assertEquals(headerProps.title, context.getString(R.string.px_text_insufficient_amount));
     }
 
     @Test
@@ -434,7 +443,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedBadFilledSecuPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.title, paymentResultProvider.getRejectedBadFilledCardTitle(""));
+        Assert.assertEquals(headerProps.title, context.getString(R.string.px_text_some_card_data_is_incorrect));
     }
 
     @Test
@@ -442,7 +451,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedBadFilledDatePaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.title, paymentResultProvider.getRejectedBadFilledCardTitle(""));
+        Assert.assertEquals(headerProps.title, context.getString(R.string.px_text_some_card_data_is_incorrect));
     }
 
     @Test
@@ -450,7 +459,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedBadFilledFormPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.title, paymentResultProvider.getRejectedBadFilledCardTitle(""));
+        Assert.assertEquals(headerProps.title, context.getString(R.string.px_text_some_card_data_is_incorrect));
     }
 
     @Test
@@ -458,7 +467,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusCallForAuthPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.title, paymentResultProvider.getRejectedCallForAuthorizeTitle());
+        Assert.assertEquals(headerProps.title, context.getString(R.string.px_title_activity_call_for_authorize));
     }
 
     @Test
@@ -478,6 +487,22 @@ public class PaymentResultContainerTest {
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
         Assert.assertEquals(headerProps.title, TextUtil.EMPTY);
+    }
+
+    @Test
+    public void onRejectedBlacklistedThenShowTitle() {
+        final PaymentResult paymentResult = PaymentResults.getStatusRejectedBlacklist();
+        final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
+
+        Assert.assertEquals(headerProps.title, context.getString(R.string.px_title_rejection_blacklist));
+    }
+
+    @Test
+    public void onRejectedFraudThenShowTitle() {
+        final PaymentResult paymentResult = PaymentResults.getStatusRejectedFraud();
+        final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
+
+        Assert.assertEquals(headerProps.title, context.getString(R.string.px_title_rejection_fraud));
     }
 
 //    @Test
@@ -564,7 +589,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedBadFilledFormPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.label, paymentResultProvider.getRejectionLabel());
+        Assert.assertEquals(headerProps.label, context.getString(R.string.px_rejection_label));
     }
 
     @Test
@@ -572,7 +597,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedInsufficientAmountPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.label, paymentResultProvider.getRejectionLabel());
+        Assert.assertEquals(headerProps.label, context.getString(R.string.px_rejection_label));
     }
 
     @Test
@@ -580,7 +605,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedOtherPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.label, paymentResultProvider.getRejectionLabel());
+        Assert.assertEquals(headerProps.label, context.getString(R.string.px_rejection_label));
     }
 
     @Test
@@ -588,7 +613,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getBoletoRejectedPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.label, paymentResultProvider.getRejectionLabel());
+        Assert.assertEquals(headerProps.label, context.getString(R.string.px_rejection_label));
     }
 
     @Test
@@ -711,7 +736,7 @@ public class PaymentResultContainerTest {
                 .build();
         container.setProps(paymentResultProps);
 
-        final Header header = container.getHeaderComponent();
+        final Header header = container.getHeaderComponent(context);
         Assert.assertEquals(header.props.height, HeaderProps.HEADER_MODE_WRAP);
     }
 
@@ -726,7 +751,7 @@ public class PaymentResultContainerTest {
                 .build();
         container.setProps(paymentResultProps);
 
-        Header header = container.getHeaderComponent();
+        Header header = container.getHeaderComponent(context);
         Assert.assertEquals(header.props.height, HeaderProps.HEADER_MODE_STRETCH);
     }
 
@@ -741,7 +766,7 @@ public class PaymentResultContainerTest {
                 .build();
         container.setProps(paymentResultProps);
 
-        Header header = container.getHeaderComponent();
+        Header header = container.getHeaderComponent(context);
         Assert.assertEquals(header.props.height, HeaderProps.HEADER_MODE_STRETCH);
     }
 
@@ -757,7 +782,7 @@ public class PaymentResultContainerTest {
 
         container.setProps(paymentResultProps);
 
-        Header header = container.getHeaderComponent();
+        Header header = container.getHeaderComponent(context);
         Assert.assertEquals(header.props.height, HeaderProps.HEADER_MODE_STRETCH);
     }
 
@@ -771,7 +796,7 @@ public class PaymentResultContainerTest {
             .build();
 
         container.setProps(paymentResultProps);
-        return container.getHeaderComponent().props;
+        return container.getHeaderComponent(context).props;
     }
 
     private HeaderProps getHeaderPropsFromContainerWith(PaymentResult paymentResult, Instruction instruction) {
@@ -784,12 +809,11 @@ public class PaymentResultContainerTest {
                 .build();
 
         container.setProps(paymentResultProps);
-        return container.getHeaderComponent().props;
+        return container.getHeaderComponent(context).props;
     }
 
     private PaymentResultContainer getContainer() {
         return new PaymentResultContainer(dispatcher,
-            new PaymentResultProps.Builder(new PaymentResultScreenConfiguration.Builder().build()).build(),
-            paymentResultProvider);
+            new PaymentResultProps.Builder(new PaymentResultScreenConfiguration.Builder().build()).build());
     }
 }

@@ -120,12 +120,10 @@ public class PaymentResultActivity extends PXActivity<PaymentResultPresenter> im
 
         props = new PaymentResultProps.Builder(paymentResultScreenConfiguration).build();
 
-        final PaymentResultProvider paymentResultProvider = new PaymentResultProviderImpl(this);
-
         presenter = createPresenter(paymentSettings);
 
         componentManager = new ComponentManager(this);
-        final Component root = new PaymentResultContainer(componentManager, props, paymentResultProvider);
+        final Component root = new PaymentResultContainer(componentManager, props);
         componentManager.setComponent(root);
         componentManager.setActionsListener(presenter);
 

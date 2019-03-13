@@ -19,8 +19,6 @@ public class BodyErrorRenderer extends Renderer<BodyError> {
         final ViewGroup bodyViewGroup = bodyErrorView.findViewById(R.id.bodyErrorContainer);
         final MPTextView titleTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorTitle);
         final MPTextView descriptionTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorDescription);
-        final MPTextView secondDescriptionTextView =
-            bodyErrorView.findViewById(R.id.paymentResultBodyErrorSecondDescription);
         final AppCompatButton actionButton = bodyErrorView.findViewById(R.id.paymentResultBodyErrorAction);
         final View middleDivider = bodyErrorView.findViewById(R.id.bodyErrorMiddleDivider);
         final MPTextView secondaryTitleTextView = bodyErrorView.findViewById(R.id.bodyErrorSecondaryTitle);
@@ -28,7 +26,6 @@ public class BodyErrorRenderer extends Renderer<BodyError> {
 
         setText(titleTextView, component.getTitle(context));
         setText(descriptionTextView, component.getDescription(context));
-        setText(secondDescriptionTextView, component.getSecondDescription(context));
 
         if (component.getTitle(context).isEmpty()) {
             final LinearLayout.LayoutParams params =
@@ -39,22 +36,10 @@ public class BodyErrorRenderer extends Renderer<BodyError> {
             descriptionTextView.setLayoutParams(params);
         }
 
-        if (component.hasActionForCallForAuth()) {
-            actionButton.setText(String
-                .format(context.getString(R.string.px_text_authorized_call_for_authorize),
-                    component.props.paymentMethodName));
-            actionButton.setVisibility(View.VISIBLE);
-            middleDivider.setVisibility(View.VISIBLE);
-            secondaryTitleTextView.setText(R.string.px_error_secondary_title_call);
-            secondaryTitleTextView.setVisibility(View.VISIBLE);
-            bottomDivider.setVisibility(View.VISIBLE);
-            actionButton.setOnClickListener(v -> component.recoverPayment());
-        } else {
-            actionButton.setVisibility(View.GONE);
-            middleDivider.setVisibility(View.GONE);
-            secondaryTitleTextView.setVisibility(View.GONE);
-            bottomDivider.setVisibility(View.GONE);
-        }
+        actionButton.setVisibility(View.GONE);
+        middleDivider.setVisibility(View.GONE);
+        secondaryTitleTextView.setVisibility(View.GONE);
+        bottomDivider.setVisibility(View.GONE);
 
         ViewUtils.stretchHeight(bodyViewGroup);
 
