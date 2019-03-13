@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.base.BasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
+import com.mercadopago.android.px.internal.datasource.IESCManager;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardView;
 import com.mercadopago.android.px.internal.repository.CardTokenRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
@@ -28,7 +28,7 @@ public class SecurityCodePresenter extends BasePresenter<SecurityCodeActivityVie
 
     @NonNull private final PaymentSettingRepository paymentSettingRepository;
     @NonNull private final CardTokenRepository cardTokenRepository;
-    @NonNull private final MercadoPagoESC mercadoPagoESC;
+    @NonNull private final IESCManager IESCManager;
     private FailureRecovery mFailureRecovery;
 
     //Card Info
@@ -46,10 +46,10 @@ public class SecurityCodePresenter extends BasePresenter<SecurityCodeActivityVie
 
     public SecurityCodePresenter(@NonNull final PaymentSettingRepository paymentSettingRepository,
         @NonNull final CardTokenRepository cardTokenRepository,
-        @NonNull final MercadoPagoESC mercadoPagoESC) {
+        @NonNull final IESCManager IESCManager) {
         this.paymentSettingRepository = paymentSettingRepository;
         this.cardTokenRepository = cardTokenRepository;
-        this.mercadoPagoESC = mercadoPagoESC;
+        this.IESCManager = IESCManager;
     }
 
     public void setPaymentMethod(final PaymentMethod paymentMethod) {
@@ -239,11 +239,11 @@ public class SecurityCodePresenter extends BasePresenter<SecurityCodeActivityVie
     }
 
     private boolean isSavedCardWithESC() {
-        return card != null && mercadoPagoESC.isESCEnabled();
+        return card != null && IESCManager.isESCEnabled();
     }
 
     private boolean isSavedCardWithoutESC() {
-        return card != null && !mercadoPagoESC.isESCEnabled();
+        return card != null && !IESCManager.isESCEnabled();
     }
 
     private boolean validateSecurityCodeFromToken() {

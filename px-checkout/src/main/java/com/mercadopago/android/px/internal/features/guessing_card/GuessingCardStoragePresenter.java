@@ -6,7 +6,7 @@ import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
 import com.mercadopago.android.px.internal.datasource.CardAssociationGatewayService;
 import com.mercadopago.android.px.internal.datasource.CardAssociationService;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
+import com.mercadopago.android.px.internal.datasource.IESCManager;
 import com.mercadopago.android.px.internal.repository.CardPaymentMethodRepository;
 import com.mercadopago.android.px.internal.repository.IdentificationRepository;
 import com.mercadopago.android.px.internal.util.ApiUtil;
@@ -27,7 +27,7 @@ import static com.mercadopago.android.px.internal.util.ApiUtil.RequestOrigin.GET
 
 public class GuessingCardStoragePresenter extends GuessingCardPresenter {
 
-    /* default */ final MercadoPagoESC mercadoPagoESC;
+    /* default */ final IESCManager IESCManager;
     /* default */ final String accessToken;
     private final CardPaymentMethodRepository cardPaymentMethodRepository;
     private final IdentificationRepository identificationRepository;
@@ -41,14 +41,14 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
         final CardPaymentMethodRepository cardPaymentMethodRepository,
         final IdentificationRepository identificationRepository,
         final CardAssociationService cardAssociationService,
-        final MercadoPagoESC mercadoPagoESC,
+        final IESCManager IESCManager,
         final CardAssociationGatewayService gatewayService) {
         super();
         this.accessToken = accessToken;
         this.cardPaymentMethodRepository = cardPaymentMethodRepository;
         this.identificationRepository = identificationRepository;
         this.cardAssociationService = cardAssociationService;
-        this.mercadoPagoESC = mercadoPagoESC;
+        this.IESCManager = IESCManager;
         this.gatewayService = gatewayService;
     }
 
@@ -224,7 +224,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onSuccess(final Token token) {
                     if (token != null) {
-                        mercadoPagoESC.saveESCWith(token.getCardId(), token.getEsc());
+                        IESCManager.saveESCWith(token.getCardId(), token.getEsc());
                     }
 
                     if (isViewAttached()) {

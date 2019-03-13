@@ -9,7 +9,7 @@ import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandlerWrappe
 import com.mercadopago.android.px.internal.repository.AmountConfigurationRepository;
 import com.mercadopago.android.px.internal.repository.AmountRepository;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
-import com.mercadopago.android.px.internal.repository.EscManager;
+import com.mercadopago.android.px.internal.repository.EscPaymentManager;
 import com.mercadopago.android.px.internal.repository.GroupsRepository;
 import com.mercadopago.android.px.internal.repository.InstructionsRepository;
 import com.mercadopago.android.px.internal.repository.PaymentRepository;
@@ -52,7 +52,7 @@ public class PaymentService implements PaymentRepository {
     @NonNull private final Context context;
     @NonNull private final TokenRepository tokenRepository;
     @NonNull private final GroupsRepository groupsRepository;
-    @NonNull private final EscManager escManager;
+    @NonNull private final EscPaymentManager escPaymentManager;
 
     @NonNull /* default */ final PaymentServiceHandlerWrapper handlerWrapper;
     @NonNull /* default */ final AmountConfigurationRepository amountConfigurationRepository;
@@ -68,13 +68,13 @@ public class PaymentService implements PaymentRepository {
         @NonNull final AmountRepository amountRepository,
         @NonNull final SplitPaymentProcessor paymentProcessor,
         @NonNull final Context context,
-        @NonNull final EscManager escManager,
+        @NonNull final EscPaymentManager escPaymentManager,
         @NonNull final TokenRepository tokenRepository,
         @NonNull final InstructionsRepository instructionsRepository,
         @NonNull final GroupsRepository groupsRepository,
         @NonNull final AmountConfigurationRepository amountConfigurationRepository) {
         this.amountConfigurationRepository = amountConfigurationRepository;
-        this.escManager = escManager;
+        this.escPaymentManager = escPaymentManager;
         this.userSelectionRepository = userSelectionRepository;
         this.pluginRepository = pluginRepository;
         this.paymentSettingRepository = paymentSettingRepository;
@@ -85,7 +85,7 @@ public class PaymentService implements PaymentRepository {
         this.tokenRepository = tokenRepository;
         this.groupsRepository = groupsRepository;
 
-        handlerWrapper = new PaymentServiceHandlerWrapper(this, escManager, instructionsRepository);
+        handlerWrapper = new PaymentServiceHandlerWrapper(this, escPaymentManager, instructionsRepository);
     }
 
     @Override
@@ -221,7 +221,7 @@ public class PaymentService implements PaymentRepository {
         //Paying with saved card without token
         final Card card = userSelectionRepository.getCard();
 
-        if (escManager.hasEsc(card)) {
+        if (escPaymentManager.hasEsc(card)) {
             //Saved card has ESC - Try to tokenize
             tokenRepository.createToken(card).enqueue(new Callback<Token>() {
                 @Override

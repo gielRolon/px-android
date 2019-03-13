@@ -1,6 +1,6 @@
 package com.mercadopago.android.px.securitycode;
 
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
+import com.mercadopago.android.px.internal.datasource.IESCManager;
 import com.mercadopago.android.px.internal.features.SecurityCodeActivityView;
 import com.mercadopago.android.px.internal.features.SecurityCodePresenter;
 import com.mercadopago.android.px.internal.repository.CardTokenRepository;
@@ -14,12 +14,10 @@ import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.SavedCardToken;
 import com.mercadopago.android.px.model.SavedESCCardToken;
 import com.mercadopago.android.px.model.SecurityCode;
-import com.mercadopago.android.px.model.Site;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.CardTokenException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
-import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.utils.StubFailMpCall;
 import com.mercadopago.android.px.utils.StubSuccessMpCall;
 import org.junit.Before;
@@ -44,7 +42,7 @@ public class SecurityCodePresenterTest {
     @Mock private PaymentSettingRepository paymentSettingRepository;
     @Mock private CardTokenRepository cardTokenRepository;
     @Mock private SecurityCodeActivityView view;
-    @Mock private MercadoPagoESC mercadoPagoESC;
+    @Mock private IESCManager IESCManager;
     @Mock private Card card;
     @Mock private PaymentRecovery paymentRecovery;
     @Mock CardInfo cardInfo;
@@ -215,7 +213,7 @@ public class SecurityCodePresenterTest {
     public void whenSaveCardWithESCEnabledThenCreateESCToken() {
         final SecurityCode securityCode = mock(SecurityCode.class);
         when(securityCode.getLength()).thenReturn(DUMMY_CVV.length());
-        when(mercadoPagoESC.isESCEnabled()).thenReturn(true);
+        when(IESCManager.isESCEnabled()).thenReturn(true);
         when(card.getSecurityCode()).thenReturn(securityCode);
         when(cardTokenRepository.createToken(any(SavedESCCardToken.class)))
             .thenReturn(new StubSuccessMpCall<>(stubToken));
@@ -233,7 +231,7 @@ public class SecurityCodePresenterTest {
         final ApiException apiException = mock(ApiException.class);
         final SecurityCode securityCode = mock(SecurityCode.class);
         when(securityCode.getLength()).thenReturn(DUMMY_CVV.length());
-        when(mercadoPagoESC.isESCEnabled()).thenReturn(true);
+        when(IESCManager.isESCEnabled()).thenReturn(true);
         when(card.getSecurityCode()).thenReturn(securityCode);
         when(cardTokenRepository.createToken(any(SavedESCCardToken.class)))
             .thenReturn(new StubFailMpCall<>(apiException));
@@ -271,7 +269,7 @@ public class SecurityCodePresenterTest {
         when(securityCode.getLength()).thenReturn(DUMMY_CVV.length());
         when(card.getId()).thenReturn(DUMMY_CARD_ID);
         when(card.getSecurityCode()).thenReturn(securityCode);
-        when(mercadoPagoESC.isESCEnabled()).thenReturn(false);
+        when(IESCManager.isESCEnabled()).thenReturn(false);
         when(cardTokenRepository.createToken(any(SavedCardToken.class))).thenReturn(new StubSuccessMpCall<>(stubToken));
 
         presenter.saveSecurityCode(DUMMY_CVV);
@@ -289,7 +287,7 @@ public class SecurityCodePresenterTest {
         when(securityCode.getLength()).thenReturn(DUMMY_CVV.length());
         when(card.getId()).thenReturn(DUMMY_CARD_ID);
         when(card.getSecurityCode()).thenReturn(securityCode);
-        when(mercadoPagoESC.isESCEnabled()).thenReturn(false);
+        when(IESCManager.isESCEnabled()).thenReturn(false);
         when(cardTokenRepository.createToken(any(SavedCardToken.class))).thenReturn(new StubFailMpCall<>(apiException));
 
         presenter.saveSecurityCode(DUMMY_CVV);
@@ -332,7 +330,7 @@ public class SecurityCodePresenterTest {
 
     private SecurityCodePresenter getBasePresenter(final SecurityCodeActivityView view) {
         final SecurityCodePresenter presenter = new SecurityCodePresenter(paymentSettingRepository, cardTokenRepository,
-            mercadoPagoESC);
+            IESCManager);
         presenter.attachView(view);
         return presenter;
     }

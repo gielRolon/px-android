@@ -1,7 +1,7 @@
 package com.mercadopago.android.px.cardvault;
 
 import android.support.annotation.Nullable;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
+import com.mercadopago.android.px.internal.datasource.IESCManager;
 import com.mercadopago.android.px.internal.features.cardvault.CardVaultPresenter;
 import com.mercadopago.android.px.internal.features.cardvault.CardVaultView;
 import com.mercadopago.android.px.internal.features.installments.PayerCostSolver;
@@ -39,7 +39,7 @@ public class CardVaultPresenterTest {
     @Mock private PaymentSettingRepository paymentSettingRepository;
     @Mock private UserSelectionRepository userSelectionRepository;
     @Mock private AmountConfigurationRepository amountConfigurationRepository;
-    @Mock private MercadoPagoESC mercadoPagoESC;
+    @Mock private IESCManager IESCManager;
     @Mock private PayerCostSolver payerCostSolver;
 
     @Mock private CardVaultView view;
@@ -48,7 +48,7 @@ public class CardVaultPresenterTest {
     public void setUp() {
         configurePaymentPreferenceMock(null);
 
-        presenter = new CardVaultPresenter(userSelectionRepository, paymentSettingRepository, mercadoPagoESC,
+        presenter = new CardVaultPresenter(userSelectionRepository, paymentSettingRepository, IESCManager,
             amountConfigurationRepository, payerCostSolver);
 
         presenter.setPaymentRecovery(null);
@@ -114,7 +114,7 @@ public class CardVaultPresenterTest {
     @Test
     public void whenGuessingCardHasInstallmentSelectedAndWithoutTokenThenStartSecurityCodeFlow() {
         configureMockedCardWith();
-        when(mercadoPagoESC.getESC(userSelectionRepository.getCard().getId())).thenReturn(TextUtil.EMPTY);
+        when(IESCManager.getESC(userSelectionRepository.getCard().getId())).thenReturn(TextUtil.EMPTY);
 
         presenter.resolveInstallmentsRequest();
 
@@ -166,7 +166,7 @@ public class CardVaultPresenterTest {
     @Test
     public void verifyResolvesOnSelectedPayerCostPayerCostListWithoutESC() {
         configureMockedCardWith();
-        when(mercadoPagoESC.getESC(userSelectionRepository.getCard().getId())).thenReturn(TextUtil.EMPTY);
+        when(IESCManager.getESC(userSelectionRepository.getCard().getId())).thenReturn(TextUtil.EMPTY);
 
         presenter.onSelectedPayerCost();
 
@@ -177,7 +177,7 @@ public class CardVaultPresenterTest {
     @Test
     public void verifyResolvesOnSelectedPayerCostPayerCostListWithESC() {
         configureMockedCardWith();
-        when(mercadoPagoESC.getESC(userSelectionRepository.getCard().getId())).thenReturn("1");
+        when(IESCManager.getESC(userSelectionRepository.getCard().getId())).thenReturn("1");
 
         presenter.onSelectedPayerCost();
 

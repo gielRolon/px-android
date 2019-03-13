@@ -14,12 +14,12 @@ import com.mercadopago.android.px.internal.datasource.AmountService;
 import com.mercadopago.android.px.internal.datasource.BankDealsService;
 import com.mercadopago.android.px.internal.datasource.CardTokenService;
 import com.mercadopago.android.px.internal.datasource.DiscountServiceImp;
-import com.mercadopago.android.px.internal.datasource.EscManagerImp;
+import com.mercadopago.android.px.internal.datasource.EscPaymentManagerImp;
 import com.mercadopago.android.px.internal.datasource.GroupsService;
 import com.mercadopago.android.px.internal.datasource.InstructionsService;
 import com.mercadopago.android.px.internal.datasource.IssuersServiceImp;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESCImpl;
+import com.mercadopago.android.px.internal.datasource.IESCManager;
+import com.mercadopago.android.px.internal.datasource.ReflectiveESCManager;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoServicesAdapter;
 import com.mercadopago.android.px.internal.datasource.PaymentService;
 import com.mercadopago.android.px.internal.datasource.PluginService;
@@ -173,9 +173,9 @@ public final class Session extends ApplicationModule
     }
 
     @NonNull
-    public MercadoPagoESC getMercadoPagoESC() {
+    public IESCManager getMercadoPagoESC() {
         final PaymentSettingRepository paymentSettings = getConfigurationModule().getPaymentSettings();
-        return new MercadoPagoESCImpl(getContext(), paymentSettings.getAdvancedConfiguration().isEscEnabled());
+        return new ReflectiveESCManager(getContext(), paymentSettings.getAdvancedConfiguration().isEscEnabled());
     }
 
     @NonNull
@@ -267,7 +267,7 @@ public final class Session extends ApplicationModule
                 getDiscountRepository(), getAmountRepository(),
                 paymentProcessor,
                 getContext(),
-                new EscManagerImp(getMercadoPagoESC()),
+                new EscPaymentManagerImp(getMercadoPagoESC()),
                 getTokenRepository(),
                 getInstructionsRepository(),
                 getGroupsRepository(),

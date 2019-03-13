@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.util.Set;
 
-public interface MercadoPagoESC {
+public interface IESCManager {
 
     // Todo remove old way to get esc.
     @Deprecated

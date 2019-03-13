@@ -4,11 +4,10 @@ import android.support.annotation.NonNull;
 
 import com.mercadopago.android.px.core.PaymentMethodPlugin;
 import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolver;
-import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolverImpl;
 import com.mercadopago.android.px.internal.base.BasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
+import com.mercadopago.android.px.internal.datasource.IESCManager;
 import com.mercadopago.android.px.internal.features.uicontrollers.AmountRowController;
 import com.mercadopago.android.px.internal.navigation.DefaultPayerInformationDriver;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
@@ -48,7 +47,7 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
     @NonNull
     private final GroupsRepository groupsRepository;
 
-    @NonNull private final MercadoPagoESC mercadoPagoESC;
+    @NonNull private final IESCManager IESCManager;
 
     @NonNull private final PaymentVaultTitleSolver titleSolver;
 
@@ -63,14 +62,14 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
                                  @NonNull final PluginRepository pluginService,
                                  @NonNull final DiscountRepository discountRepository,
                                  @NonNull final GroupsRepository groupsRepository,
-                                 @NonNull final MercadoPagoESC mercadoPagoESC,
+                                 @NonNull final IESCManager IESCManager,
                                  @NonNull final PaymentVaultTitleSolver titleSolver) {
         this.paymentSettingRepository = paymentSettingRepository;
         this.userSelectionRepository = userSelectionRepository;
         pluginRepository = pluginService;
         this.discountRepository = discountRepository;
         this.groupsRepository = groupsRepository;
-        this.mercadoPagoESC = mercadoPagoESC;
+        this.IESCManager = IESCManager;
         this.titleSolver = titleSolver;
     }
 
@@ -379,7 +378,7 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
 
     private void trackInitialScreen() {
         final SelectMethodView selectMethodView =
-            new SelectMethodView(paymentMethodSearch, mercadoPagoESC.getESCCardIds(),
+            new SelectMethodView(paymentMethodSearch, IESCManager.getESCCardIds(),
                 paymentSettingRepository.getCheckoutPreference());
         setCurrentViewTracker(selectMethodView);
     }

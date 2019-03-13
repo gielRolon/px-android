@@ -7,11 +7,11 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class MercadoPagoESCImpl implements MercadoPagoESC {
+public final class ReflectiveESCManager implements IESCManager {
 
     private static final class EscManagerNames {
         private static final String FACTORY_METHOD = "create";
-        private static final String CLASS_NAME = "EscManager";
+        private static final String CLASS_NAME = "ESCManager";
         private static final String METHOD_GET_SAVED_CARD_IDS = "getSavedCardIds";
         private static final String METHOD_SAVE_ESC_WITH = "saveESCWith";
         private static final String METHOD_DELETE_ESC_WITH = "deleteESCWith";
@@ -24,7 +24,7 @@ public final class MercadoPagoESCImpl implements MercadoPagoESC {
 
     private final boolean escEnabled;
 
-    public MercadoPagoESCImpl(@NonNull final Context appContext, final boolean escEnabled) {
+    public ReflectiveESCManager(@NonNull final Context appContext, final boolean escEnabled) {
         this.appContext = appContext;
         escManagerInstance = createEscManagerInstance();
         this.escEnabled = escEnabled && escManagerInstance != null;

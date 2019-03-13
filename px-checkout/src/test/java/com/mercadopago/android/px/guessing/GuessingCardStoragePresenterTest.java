@@ -3,7 +3,7 @@ package com.mercadopago.android.px.guessing;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.datasource.CardAssociationGatewayService;
 import com.mercadopago.android.px.internal.datasource.CardAssociationService;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
+import com.mercadopago.android.px.internal.datasource.IESCManager;
 import com.mercadopago.android.px.internal.features.guessing_card.GuessingCard;
 import com.mercadopago.android.px.internal.features.guessing_card.GuessingCardStoragePresenter;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardView;
@@ -61,7 +61,7 @@ public class GuessingCardStoragePresenterTest {
 
     @Mock private CardPaymentMethodRepository cardPaymentMethodRepository;
     @Mock private IdentificationRepository identificationRepository;
-    @Mock private MercadoPagoESC mercadoPagoESC;
+    @Mock private IESCManager IESCManager;
     @Mock private CardAssociationGatewayService cardAssociationGatewayService;
     @Mock private GuessingCard.View view;
     @Mock private CardService cardService;
@@ -79,7 +79,7 @@ public class GuessingCardStoragePresenterTest {
         final GuessingCardStoragePresenter presenter =
             new GuessingCardStoragePresenter(DUMMY_ACCESS_TOKEN, cardPaymentMethodRepository, identificationRepository,
                 cardAssociationService,
-                mercadoPagoESC, cardAssociationGatewayService);
+                IESCManager, cardAssociationGatewayService);
 
         presenter.attachView(view);
         return presenter;
@@ -419,7 +419,7 @@ public class GuessingCardStoragePresenterTest {
 
         presenter.createToken();
 
-        verify(mercadoPagoESC).saveESCWith(DUMMY_CARD_ID, DUMMY_TOKEN_ESC);
+        verify(IESCManager).saveESCWith(DUMMY_CARD_ID, DUMMY_TOKEN_ESC);
         verify(view).finishCardStorageFlowWithSuccess();
     }
 
@@ -454,7 +454,7 @@ public class GuessingCardStoragePresenterTest {
         presenter.createToken();
 
         // Do not save esc, since the tokenization failed
-        verify(mercadoPagoESC, never()).saveESCWith(DUMMY_CARD_ID, DUMMY_TOKEN_ESC);
+        verify(IESCManager, never()).saveESCWith(DUMMY_CARD_ID, DUMMY_TOKEN_ESC);
         verify(view).finishCardStorageFlowWithSuccess();
     }
 

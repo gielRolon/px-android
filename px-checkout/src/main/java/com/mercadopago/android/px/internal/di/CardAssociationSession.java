@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.datasource.CardAssociationGatewayService;
 import com.mercadopago.android.px.internal.datasource.CardAssociationService;
 import com.mercadopago.android.px.internal.datasource.CardPaymentMethodService;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESCImpl;
+import com.mercadopago.android.px.internal.datasource.IESCManager;
+import com.mercadopago.android.px.internal.datasource.ReflectiveESCManager;
 import com.mercadopago.android.px.internal.repository.CardPaymentMethodRepository;
 import com.mercadopago.android.px.internal.services.CardService;
 import com.mercadopago.android.px.internal.services.GatewayService;
@@ -45,8 +45,8 @@ public final class CardAssociationSession extends ApplicationModule {
     }
 
     @NonNull
-    public MercadoPagoESC getMercadoPagoESC() {
-        return new MercadoPagoESCImpl(getContext(), true);
+    public IESCManager getMercadoPagoESC() {
+        return new ReflectiveESCManager(getContext(), true);
     }
 
     @NonNull

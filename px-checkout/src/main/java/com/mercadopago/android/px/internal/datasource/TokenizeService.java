@@ -17,16 +17,16 @@ public class TokenizeService implements TokenRepository {
 
     @NonNull private final GatewayService gatewayService;
     @NonNull private final PaymentSettingRepository paymentSettingRepository;
-    @NonNull private final MercadoPagoESC mercadoPagoESC;
+    @NonNull private final IESCManager IESCManager;
     @NonNull private final Device device;
 
     public TokenizeService(@NonNull final GatewayService gatewayService,
         @NonNull final PaymentSettingRepository paymentSettingRepository,
-        @NonNull final MercadoPagoESC mercadoPagoESC,
+        @NonNull final IESCManager IESCManager,
         @NonNull final Device device) {
         this.gatewayService = gatewayService;
         this.paymentSettingRepository = paymentSettingRepository;
-        this.mercadoPagoESC = mercadoPagoESC;
+        this.IESCManager = IESCManager;
         this.device = device;
     }
 
@@ -35,12 +35,12 @@ public class TokenizeService implements TokenRepository {
         return new MPCall<Token>() {
             @Override
             public void enqueue(final Callback<Token> callback) {
-                serviceCallWrapp(card.getId(), mercadoPagoESC.getESC(card.getId())).enqueue(wrap(card, callback));
+                serviceCallWrapp(card.getId(), IESCManager.getESC(card.getId())).enqueue(wrap(card, callback));
             }
 
             @Override
             public void execute(final Callback<Token> callback) {
-                serviceCallWrapp(card.getId(), mercadoPagoESC.getESC(card.getId())).enqueue(wrap(card, callback));
+                serviceCallWrapp(card.getId(), IESCManager.getESC(card.getId())).enqueue(wrap(card, callback));
             }
         };
     }
@@ -51,7 +51,7 @@ public class TokenizeService implements TokenRepository {
             public void success(final Token token) {
                 //TODO move to esc manager  / Token repo
                 token.setLastFourDigits(card.getLastFourDigits());
-                mercadoPagoESC.saveESCWith(card.getId(), token.getEsc());
+                IESCManager.saveESCWith(card.getId(), token.getEsc());
                 paymentSettingRepository.configure(token);
                 callback.success(token);
             }
@@ -61,7 +61,7 @@ public class TokenizeService implements TokenRepository {
                 //TODO move to esc manager  / Token repo
                 if (EscUtil.isInvalidEscForApiException(apiException)) {
                     paymentSettingRepository.configure((Token) null);
-                    mercadoPagoESC.deleteESCWith(card.getId());
+                    IESCManager.deleteESCWith(card.getId());
                 }
 
                 callback.failure(apiException);
