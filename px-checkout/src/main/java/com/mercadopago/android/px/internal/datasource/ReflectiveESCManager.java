@@ -58,8 +58,9 @@ public final class ReflectiveESCManager implements IESCManager {
         try {
             if (escEnabled && escManagerInstance != null) {
                 final Method getMethod =
-                    escManagerInstance.getClass().getMethod(EscManagerNames.METHOD_GET_ESC, String.class);
-                return (String) getMethod.invoke(escManagerInstance, cardId);
+                    escManagerInstance.getClass()
+                        .getMethod(EscManagerNames.METHOD_GET_ESC, String.class, String.class, String.class);
+                return (String) getMethod.invoke(escManagerInstance, cardId, firstDigits, lastDigits);
             }
             return null;
         } catch (final Exception e) {
