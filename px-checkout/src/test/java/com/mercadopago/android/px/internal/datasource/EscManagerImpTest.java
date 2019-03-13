@@ -93,7 +93,7 @@ public class EscManagerImpTest {
         final boolean invalid =
             escManager.manageEscForPayment(Collections.singletonList(paymentData), Payment.StatusCodes.STATUS_APPROVED,
                 Payment.StatusDetail.STATUS_DETAIL_ACCREDITED);
-        verify(mercadoPagoESC).saveESC(paymentData.getToken().getCardId(), paymentData.getToken().getEsc());
+        verify(mercadoPagoESC).saveESCWith(paymentData.getToken().getCardId(), paymentData.getToken().getEsc());
         verifyNoMoreInteractions(mercadoPagoESC);
         assertFalse(invalid);
     }
@@ -104,7 +104,7 @@ public class EscManagerImpTest {
         final boolean invalid =
             escManager.manageEscForPayment(Collections.singletonList(paymentData), Payment.StatusCodes.STATUS_REJECTED,
                 Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_BAD_FILLED_DATE);
-        verify(mercadoPagoESC).deleteESC(paymentData.getToken().getCardId());
+        verify(mercadoPagoESC).deleteESCWith(paymentData.getToken().getCardId());
         verifyNoMoreInteractions(mercadoPagoESC);
         assertFalse(invalid);
     }
@@ -115,7 +115,7 @@ public class EscManagerImpTest {
         final boolean invalid =
             escManager.manageEscForPayment(Collections.singletonList(paymentData), Payment.StatusCodes.STATUS_REJECTED,
                 Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC);
-        verify(mercadoPagoESC).deleteESC(paymentData.getToken().getCardId());
+        verify(mercadoPagoESC).deleteESCWith(paymentData.getToken().getCardId());
         verifyNoMoreInteractions(mercadoPagoESC);
         assertTrue(invalid);
     }
@@ -145,7 +145,7 @@ public class EscManagerImpTest {
         final PaymentData paymentData = validCardPaymentData();
         final MercadoPagoError error = escMpError();
         final boolean invalid = escManager.manageEscForError(error, Collections.singletonList(paymentData));
-        verify(mercadoPagoESC).deleteESC(paymentData.getToken().getCardId());
+        verify(mercadoPagoESC).deleteESCWith(paymentData.getToken().getCardId());
         verifyNoMoreInteractions(mercadoPagoESC);
         assertTrue(invalid);
     }
@@ -155,7 +155,7 @@ public class EscManagerImpTest {
         final PaymentData paymentData = validCardPaymentData();
         final MercadoPagoError error = multipleErrorEscMpError();
         final boolean invalid = escManager.manageEscForError(error, Collections.singletonList(paymentData));
-        verify(mercadoPagoESC).deleteESC(paymentData.getToken().getCardId());
+        verify(mercadoPagoESC).deleteESCWith(paymentData.getToken().getCardId());
         verifyNoMoreInteractions(mercadoPagoESC);
         assertTrue(invalid);
     }

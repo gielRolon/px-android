@@ -419,7 +419,7 @@ public class GuessingCardStoragePresenterTest {
 
         presenter.createToken();
 
-        verify(mercadoPagoESC).saveESC(DUMMY_CARD_ID, DUMMY_TOKEN_ESC);
+        verify(mercadoPagoESC).saveESCWith(DUMMY_CARD_ID, DUMMY_TOKEN_ESC);
         verify(view).finishCardStorageFlowWithSuccess();
     }
 
@@ -454,7 +454,7 @@ public class GuessingCardStoragePresenterTest {
         presenter.createToken();
 
         // Do not save esc, since the tokenization failed
-        verify(mercadoPagoESC, never()).saveESC(DUMMY_CARD_ID, DUMMY_TOKEN_ESC);
+        verify(mercadoPagoESC, never()).saveESCWith(DUMMY_CARD_ID, DUMMY_TOKEN_ESC);
         verify(view).finishCardStorageFlowWithSuccess();
     }
 

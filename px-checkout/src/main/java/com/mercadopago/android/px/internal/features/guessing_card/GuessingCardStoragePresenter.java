@@ -224,7 +224,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onSuccess(final Token token) {
                     if (token != null) {
-                        mercadoPagoESC.saveESC(token.getCardId(), token.getEsc());
+                        mercadoPagoESC.saveESCWith(token.getCardId(), token.getEsc());
                     }
 
                     if (isViewAttached()) {

@@ -30,9 +30,9 @@ public class EscManagerImp implements EscManager {
         for (final PaymentData paymentData : paymentDataList) {
             if (EscUtil.shouldDeleteEsc(paymentData, paymentStatus,
                 paymentStatusDetail)) {
-                mercadoPagoESC.deleteESC(paymentData.getToken().getCardId());
+                mercadoPagoESC.deleteESCWith(paymentData.getToken().getCardId());
             } else if (EscUtil.shouldStoreESC(paymentData, paymentStatus, paymentStatusDetail)) {
-                mercadoPagoESC.saveESC(paymentData.getToken().getCardId(), paymentData.getToken().getEsc());
+                mercadoPagoESC.saveESCWith(paymentData.getToken().getCardId(), paymentData.getToken().getEsc());
             }
 
             result |= EscUtil.isInvalidEscPayment(paymentData, paymentStatus, paymentStatusDetail);
@@ -48,7 +48,7 @@ public class EscManagerImp implements EscManager {
         for (final PaymentData paymentData : paymentDataList) {
             final boolean isInvalidEsc = paymentData.containsCardInfo() && EscUtil.isErrorInvalidPaymentWithEsc(error);
             if (isInvalidEsc) {
-                mercadoPagoESC.deleteESC(paymentData.getToken().getCardId());
+                mercadoPagoESC.deleteESCWith(paymentData.getToken().getCardId());
             }
             result |= isInvalidEsc;
         }

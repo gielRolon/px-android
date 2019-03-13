@@ -1,34 +1,33 @@
 package com.mercadopago.android.px.internal.datasource;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MercadoPagoESCImpl implements MercadoPagoESC {
+public final class MercadoPagoESCImpl implements MercadoPagoESC {
 
-    private static final String ESC_BUILDER_CLASS_NAME = "com.mercadopago.ml_esc_manager.ESCManagerBuilder";
-    private static final String METHOD_SET_CONTEXT = "setApplicationContext";
-    private static final String METHOD_BUILD = "build";
-    private static final String METHOD_SAVE_ESC = "saveESC";
-    private static final String METHOD_GET_ESC = "getESC";
-    private static final String METHOD_DELETE_ESC = "deleteESC";
-    private static final String METHOD_DELETE_ALL_ESC = "deleteAllESC";
-    private static final String METHOD_GET_SAVED_CARD_IDS = "getSavedCardIds";
+    private static final class EscManagerNames {
+        private static final String FACTORY_METHOD = "create";
+        private static final String CLASS_NAME = "EscManager";
+        private static final String METHOD_GET_SAVED_CARD_IDS = "getSavedCardIds";
+        private static final String METHOD_SAVE_ESC_WITH = "saveESCWith";
+        private static final String METHOD_DELETE_ESC_WITH = "deleteESCWith";
+        private static final String METHOD_GET_ESC = "getESC";
+    }
 
-    private final Context context;
-    private Object actualClass;
-    private boolean escEnabled;
+    @NonNull private final Context appContext;
 
-    public MercadoPagoESCImpl(Context context, boolean escEnabled) {
-        this.context = context;
-        this.escEnabled = escEnabled;
-        if (escEnabled && isESCAvailable()) {
-            actualClass = getESCClass();
-        } else {
-            this.escEnabled = false;
-        }
+    @Nullable private final Object escManagerInstance;
+
+    private final boolean escEnabled;
+
+    public MercadoPagoESCImpl(@NonNull final Context appContext, final boolean escEnabled) {
+        this.appContext = appContext;
+        escManagerInstance = createEscManagerInstance();
+        this.escEnabled = escEnabled && escManagerInstance != null;
     }
 
     @Override
@@ -36,155 +35,114 @@ public class MercadoPagoESCImpl implements MercadoPagoESC {
         return escEnabled;
     }
 
-    private Object getESCClass() {
+    @Nullable
+    private Object createEscManagerInstance() {
         try {
-            java.lang.reflect.Method appContextMethod;
-            java.lang.reflect.Method buildMethod;
-
-            Class builderclass = Class.forName(ESC_BUILDER_CLASS_NAME);
-            Object builder = builderclass.newInstance();
-
-            appContextMethod = builder.getClass().getMethod(METHOD_SET_CONTEXT, Context.class);
-            Object builder2 = appContextMethod.invoke(builder, context);
-
-            buildMethod = builder2.getClass().getMethod(METHOD_BUILD);
-            Object actualClass = buildMethod.invoke(builder2);
-
-            return actualClass;
-        } catch (InvocationTargetException e1) {
-            return null;
-        } catch (NoSuchMethodException e2) {
-            return null;
-        } catch (InstantiationException e3) {
-            return null;
-        } catch (IllegalAccessException e4) {
-            return null;
-        } catch (ClassNotFoundException e5) {
+            final Class escManagerClass = Class.forName(EscManagerNames.CLASS_NAME);
+            final Method factoryMethod = escManagerClass.getMethod(EscManagerNames.FACTORY_METHOD, Context.class);
+            return factoryMethod.invoke(appContext);
+        } catch (final Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public String getESC(@Nullable final String cardId) {
+        return getESC(cardId, "", "");
     }
 
     @Nullable
     @Override
-    public String getESC(final String cardId) {
-        if (escEnabled) {
-            try {
-                java.lang.reflect.Method getMethod;
-                if (actualClass != null) {
-                    getMethod = actualClass.getClass().getMethod(METHOD_GET_ESC, String.class);
-                    Object esc = getMethod.invoke(actualClass, cardId);
-                    return (String) esc;
-                }
-            } catch (IllegalAccessException e1) {
-                return null;
-            } catch (InvocationTargetException e2) {
-                return null;
-            } catch (NoSuchMethodException e3) {
-                return null;
+    public String getESC(@Nullable final String cardId, @NonNull final String firstDigits,
+        @NonNull final String lastDigits) {
+        try {
+            if (escEnabled && escManagerInstance != null) {
+                final Method getMethod =
+                    escManagerInstance.getClass().getMethod(EscManagerNames.METHOD_GET_ESC, String.class);
+                return (String) getMethod.invoke(escManagerInstance, cardId);
             }
+            return null;
+        } catch (final Exception e) {
+            return null;
         }
-        return null;
+    }
+
+
+    @Override
+    public boolean saveESCWith(@NonNull final String cardId, @NonNull final String value) {
+        return save(cardId, value);
     }
 
     @Override
-    public boolean saveESC(final String cardId, final String value) {
-        if (escEnabled) {
-            try {
-
-                java.lang.reflect.Method saveMethod;
-
-                if (actualClass != null) {
-                    saveMethod = actualClass.getClass().getMethod(METHOD_SAVE_ESC, String.class, String.class);
-                    Object wasSaved = saveMethod.invoke(actualClass, cardId, value);
-                    return (Boolean) wasSaved;
-                }
-            } catch (IllegalAccessException e1) {
-                return false;
-            } catch (InvocationTargetException e2) {
-                return false;
-            } catch (NoSuchMethodException e3) {
-                return false;
-            }
-        }
-        return false;
+    public boolean saveESCWith(@NonNull final String firstDigits, @NonNull final String lastDigits,
+        @NonNull final String esc) {
+        return save(firstDigits, lastDigits, esc);
     }
 
-    @Override
-    public void deleteESC(String cardId) {
-        if (escEnabled) {
-            try {
-
-                java.lang.reflect.Method deleteMethod;
-
-                if (actualClass != null) {
-                    deleteMethod = actualClass.getClass().getMethod(METHOD_DELETE_ESC, String.class);
-                    deleteMethod.invoke(actualClass, cardId);
-                }
-            } catch (IllegalAccessException e1) {
-
-            } catch (InvocationTargetException e2) {
-
-            } catch (NoSuchMethodException e3) {
-
+    private boolean save(final String... args) {
+        try {
+            if (escEnabled && escManagerInstance != null) {
+                final Method saveMethod =
+                    escManagerInstance.getClass()
+                        .getMethod(EscManagerNames.METHOD_SAVE_ESC_WITH, createClassesParams(args));
+                final Object wasSaved = saveMethod.invoke(escManagerInstance, args);
+                return (Boolean) wasSaved;
             }
+
+            return false;
+        } catch (final Exception e) {
+            return false;
         }
     }
 
     @Override
-    public void deleteAllESC() {
-        if (escEnabled) {
-            try {
+    public void deleteESCWith(@NonNull final String cardId) {
+        delete(cardId);
+    }
 
-                java.lang.reflect.Method deleteAllMethod;
+    @Override
+    public void deleteESCWith(@NonNull final String firstDigits, @NonNull final String lastDigits) {
+        delete(firstDigits, lastDigits);
+    }
 
-                if (actualClass != null) {
-                    deleteAllMethod = actualClass.getClass().getMethod(METHOD_DELETE_ALL_ESC);
-                    deleteAllMethod.invoke(actualClass);
-                }
-            } catch (IllegalAccessException e1) {
-
-            } catch (InvocationTargetException e2) {
-
-            } catch (NoSuchMethodException e3) {
-
+    private void delete(@NonNull final String... args) {
+        try {
+            if (escEnabled && escManagerInstance != null) {
+                final Method deleteMethod =
+                    escManagerInstance.getClass()
+                        .getMethod(EscManagerNames.METHOD_DELETE_ESC_WITH, createClassesParams(args));
+                deleteMethod.invoke(escManagerInstance, args);
             }
+        } catch (final Exception e) {
+            //Do nothing
         }
+    }
+
+    private Class<String>[] createClassesParams(@NonNull final String[] args) {
+        final Class<String>[] params = new Class[args.length];
+        for (int i = 0; i < args.length; i++) {
+            params[i] = String.class;
+        }
+        return params;
     }
 
     @Override
     public Set<String> getESCCardIds() {
-        Set<String> cardIds = new HashSet<>();
 
+        final Set<String> cardIds = new HashSet<>();
         if (escEnabled) {
             try {
 
-                java.lang.reflect.Method getAllMethod;
-
-                if (actualClass != null) {
-                    getAllMethod = actualClass.getClass().getMethod(METHOD_GET_SAVED_CARD_IDS);
-                    Object objects = getAllMethod.invoke(actualClass);
-                    cardIds = (Set<String>) objects;
-                    return cardIds;
+                if (escManagerInstance != null) {
+                    final Method getAllMethod =
+                        escManagerInstance.getClass().getMethod(EscManagerNames.METHOD_GET_SAVED_CARD_IDS);
+                    final Object objects = getAllMethod.invoke(escManagerInstance);
+                    return (Set<String>) objects;
                 }
-            } catch (IllegalAccessException e) {
-                return cardIds;
-            } catch (InvocationTargetException e) {
-                return cardIds;
-            } catch (NoSuchMethodException e) {
+            } catch (final Exception e) {
                 return cardIds;
             }
         }
         return cardIds;
-    }
-
-    private boolean isESCAvailable() {
-        boolean answer;
-        try {
-            Class cls = Class.forName(ESC_BUILDER_CLASS_NAME);
-            answer = true;
-        } catch (ClassNotFoundException e) {
-            answer = false;
-        }
-        return answer;
     }
 }

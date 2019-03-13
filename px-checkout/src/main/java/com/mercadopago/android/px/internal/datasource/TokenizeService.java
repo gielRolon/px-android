@@ -51,7 +51,7 @@ public class TokenizeService implements TokenRepository {
             public void success(final Token token) {
                 //TODO move to esc manager  / Token repo
                 token.setLastFourDigits(card.getLastFourDigits());
-                mercadoPagoESC.saveESC(card.getId(), token.getEsc());
+                mercadoPagoESC.saveESCWith(card.getId(), token.getEsc());
                 paymentSettingRepository.configure(token);
                 callback.success(token);
             }
@@ -61,7 +61,7 @@ public class TokenizeService implements TokenRepository {
                 //TODO move to esc manager  / Token repo
                 if (EscUtil.isInvalidEscForApiException(apiException)) {
                     paymentSettingRepository.configure((Token) null);
-                    mercadoPagoESC.deleteESC(card.getId());
+                    mercadoPagoESC.deleteESCWith(card.getId());
                 }
 
                 callback.failure(apiException);
