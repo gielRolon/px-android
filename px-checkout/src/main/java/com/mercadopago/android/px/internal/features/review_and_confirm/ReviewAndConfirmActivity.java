@@ -435,7 +435,7 @@ public final class ReviewAndConfirmActivity extends PXActivity<ReviewAndConfirmP
      */
     @Override
     public void onBackPressed() {
-        if (isExploading()) {
+        if (isExploding()) {
             return;
         }
 
@@ -444,7 +444,7 @@ public final class ReviewAndConfirmActivity extends PXActivity<ReviewAndConfirmP
         super.onBackPressed();
     }
 
-    private boolean isExploading() {
+    private boolean isExploding() {
         final ExplodingFragment explodingFragment =
             (ExplodingFragment) getSupportFragmentManager().findFragmentByTag(TAG_EXPLODING_FRAGMENT);
         return explodingFragment != null

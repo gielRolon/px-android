@@ -12,6 +12,7 @@ import com.mercadopago.android.px.internal.datasource.MercadoPagoESCImpl;
 import com.mercadopago.android.px.internal.di.ConfigurationModule;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.business_result.BusinessPaymentResultActivity;
+import com.mercadopago.android.px.internal.features.explode.ExplodingFragment;
 import com.mercadopago.android.px.internal.features.express.ExpressPaymentFragment;
 import com.mercadopago.android.px.internal.features.paymentresult.PaymentResultActivity;
 import com.mercadopago.android.px.internal.features.plugins.PaymentProcessorActivity;
@@ -63,6 +64,7 @@ public class CheckoutActivity extends PXActivity implements CheckoutView, Expres
     private static final int REQ_CARD_VAULT = 0x04;
     private static final int REQ_REVIEW_AND_CONFIRM = 0x05;
     private static final String TAG_ONETAP_FRAGMENT = "TAG_ONETAP";
+    private static final String TAG_EXPLODING_FRAGMENT = "TAG_EXPLODING_FRAGMENT";
 
     //TODO do not make it public - Needed refactor one tap for this.
     public CheckoutPresenter presenter;
@@ -145,7 +147,17 @@ public class CheckoutActivity extends PXActivity implements CheckoutView, Expres
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (isExploding()) {
+            return;
+        }
+    }
+
+    private boolean isExploding() {
+        final ExplodingFragment explodingFragment =
+            (ExplodingFragment) getSupportFragmentManager().findFragmentByTag(TAG_EXPLODING_FRAGMENT);
+        return explodingFragment != null
+            && explodingFragment.isAdded()
+            && explodingFragment.isVisible();
     }
 
     protected CheckoutPresenter getActivityParameters() {
