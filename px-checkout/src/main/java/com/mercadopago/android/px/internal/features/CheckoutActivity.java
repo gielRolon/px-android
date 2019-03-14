@@ -150,6 +150,8 @@ public class CheckoutActivity extends PXActivity implements CheckoutView, Expres
         if (isExploding()) {
             return;
         }
+
+        super.onBackPressed();
     }
 
     private boolean isExploding() {
