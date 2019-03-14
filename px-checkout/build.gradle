@@ -37,4 +37,6 @@ dependencies {
     implementation "com.google.code.gson:gson:$gson"
     implementation "com.squareup.picasso:picasso:$picasso"
     implementation "com.mercadolibre.android:ui:$meli_ui_lib"
+
+    implementation "com.mercadolibre.android.card.header:card-header:LOCAL-0.3.0-20190312180644"
 }

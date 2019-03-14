@@ -88,21 +88,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.mercadopago.android.px.internal.view.FixedAspectRatioFrameLayout
-                    android:id="@+id/aspect_ratio_container"
+                <com.mercadopago.android.px.internal.view.DynamicHeightViewPager
+                    android:id="@+id/payment_method_pager"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:px_aspectRatioHeight="460"
-                    app:px_aspectRatioWidth="850"
-                    tools:background="@color/px_expressCheckoutSeparatorLine">
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/payment_method_pager"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-
-                </com.mercadopago.android.px.internal.view.FixedAspectRatioFrameLayout>
-
+                    android:layout_height="wrap_content"/>
 
                 <com.mercadopago.android.px.internal.view.ScrollingPagerIndicator
                     android:id="@+id/indicator"

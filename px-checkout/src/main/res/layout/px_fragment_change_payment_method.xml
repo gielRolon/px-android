@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:layout_height="200dp">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:id="@+id/payment_method"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:cardCornerRadius="@dimen/px_xs_margin"
         android:layout_marginLeft="@dimen/px_m_margin"
         android:layout_marginRight="@dimen/px_m_margin"
@@ -19,44 +18,51 @@
         app:cardBackgroundColor="@color/px_expressCheckoutChangePaymentMethodColor"
         app:cardElevation="2dp">
 
-        <ImageView
+        <com.mercadopago.android.px.internal.view.FixedAspectRatioFrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/px_change_payment_method_shape"/>
+            android:layout_height="wrap_content"
+            app:px_aspectRatioWidth="@integer/px_card_default_width"
+            app:px_aspectRatioHeight="@integer/px_card_default_height">
 
-        <LinearLayout
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/px_change_payment_method_shape"/>
 
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
+            <LinearLayout
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/floating_change"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:elevation="@dimen/px_xxxs_margin"
-                android:tint="@color/ui_components_primary_color"
-                app:elevation="@dimen/px_xxxs_margin"
-                app:backgroundTint="@color/px_white"
-                app:srcCompat="@android:drawable/ic_input_add"
-                app:fabSize="mini"/>
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <com.mercadolibre.android.ui.widgets.MeliButton
-                android:id="@+id/message"
-                android:padding="@dimen/px_xxs_margin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:type="optionPrimary"
-                tools:text="Agregar nueva tarjeta"/>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/floating_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:elevation="@dimen/px_xxxs_margin"
+                    android:tint="@color/ui_components_primary_color"
+                    app:elevation="@dimen/px_xxxs_margin"
+                    app:backgroundTint="@color/px_white"
+                    app:srcCompat="@android:drawable/ic_input_add"
+                    app:fabSize="mini"/>
 
-        </LinearLayout>
+                <com.mercadolibre.android.ui.widgets.MeliButton
+                    android:id="@+id/message"
+                    android:padding="@dimen/px_xxs_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:type="optionPrimary"
+                    tools:text="Agregar nueva tarjeta"/>
 
+            </LinearLayout>
+
+        </com.mercadopago.android.px.internal.view.FixedAspectRatioFrameLayout>
 
     </android.support.v7.widget.CardView>
 
-</LinearLayout>
+</FrameLayout>

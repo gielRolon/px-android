@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.viewmodel.drawables.SavedCardDrawableFragmentItem;
 
@@ -33,13 +32,5 @@ public class SavedCardLowResFragment extends SavedCardFragment {
     @Override
     protected void setIssuerIcon(@NonNull final View view, @NonNull final SavedCardDrawableFragmentItem drawableCard) {
         //Do nothing - low res has not issuer icon.
-    }
-
-    @Override
-    protected void setCardNumber(@NonNull final View view,
-        @NonNull final SavedCardDrawableFragmentItem drawableCard, final int fontColor){
-        final TextView cardNumber = view.findViewById(R.id.card_number);
-        cardNumber.setTextColor(fontColor);
-        cardNumber.setText(drawableCard.card.getCardPattern());
     }
 }

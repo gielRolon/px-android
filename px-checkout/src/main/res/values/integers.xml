@@ -8,5 +8,8 @@
     <integer name="px_long_animation_time">500</integer>
     <integer name="px_short_animation_time">200</integer>
     <integer name="px_shortest_animation_time">100</integer>
+    <integer name="px_card_default_width">256</integer>
+    <integer name="px_card_default_height">158</integer>
+    <integer name="px_card_default_height_lowres">94</integer>
 
 </resources>
