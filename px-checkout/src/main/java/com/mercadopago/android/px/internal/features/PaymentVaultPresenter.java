@@ -1,13 +1,12 @@
 package com.mercadopago.android.px.internal.features;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.core.PaymentMethodPlugin;
-import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolver;
 import com.mercadopago.android.px.internal.base.BasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.internal.datasource.IESCManager;
+import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolver;
 import com.mercadopago.android.px.internal.features.uicontrollers.AmountRowController;
 import com.mercadopago.android.px.internal.navigation.DefaultPayerInformationDriver;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
@@ -17,6 +16,7 @@ import com.mercadopago.android.px.internal.repository.PluginRepository;
 import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.internal.util.TextUtil;
 import com.mercadopago.android.px.internal.view.AmountView;
+import com.mercadopago.android.px.internal.viewmodel.mappers.CustomSearchItemToCardMapper;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CustomSearchItem;
 import com.mercadopago.android.px.model.DiscountConfigurationModel;
@@ -268,7 +268,7 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
 
     private Card getCardWithPaymentMethod(final CustomSearchItem searchItem) {
         final PaymentMethod paymentMethod = paymentMethodSearch.getPaymentMethodById(searchItem.getPaymentMethodId());
-        final Card selectedCard = getCardById(paymentMethodSearch.getCards(), searchItem.getId());
+        final Card selectedCard = new CustomSearchItemToCardMapper().map(searchItem);
         if (paymentMethod != null) {
             selectedCard.setPaymentMethod(paymentMethod);
             if (selectedCard.getSecurityCode() == null && paymentMethod.getSettings() != null &&
@@ -277,17 +277,6 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
             }
         }
         return selectedCard;
-    }
-
-    private Card getCardById(final Iterable<Card> savedCards, final String cardId) {
-        Card foundCard = null;
-        for (final Card card : savedCards) {
-            if (card.getId().equals(cardId)) {
-                foundCard = card;
-                break;
-            }
-        }
-        return foundCard;
     }
 
     private void startNextStepForPaymentType(final PaymentMethodSearchItem item, final boolean automaticSelection) {

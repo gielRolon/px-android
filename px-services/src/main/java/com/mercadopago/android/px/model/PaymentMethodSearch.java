@@ -249,9 +249,15 @@ public class PaymentMethodSearch implements Serializable {
         return null;
     }
 
+    /**
+     *
+     * @return cards or empty arraylist.
+     * @deprecated the card info has been moved to custom option items.
+     */
+    @Deprecated
     @NonNull
     public List<Card> getCards() {
-        return cards == null ? new ArrayList<Card>() : cards;
+        return cards == null ? new ArrayList<>() : cards;
     }
 
     /**

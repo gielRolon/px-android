@@ -36,14 +36,14 @@ public class TokenizeService implements TokenRepository {
             @Override
             public void enqueue(final Callback<Token> callback) {
                 serviceCallWrapp(card.getId(),
-                    IESCManager.getESC(card.getId(), "XXXX", card.getLastFourDigits()))
+                    IESCManager.getESC(card.getId(), card.getFirstSixDigits(), card.getLastFourDigits()))
                     .enqueue(wrap(card, callback));
             }
 
             @Override
             public void execute(final Callback<Token> callback) {
                 serviceCallWrapp(card.getId(),
-                    IESCManager.getESC(card.getId(), "XXXX", card.getLastFourDigits()))
+                    IESCManager.getESC(card.getId(), card.getFirstSixDigits(), card.getLastFourDigits()))
                     .enqueue(wrap(card, callback));
             }
         };

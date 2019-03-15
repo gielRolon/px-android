@@ -115,7 +115,7 @@ public class CardVaultPresenterTest {
     public void whenGuessingCardHasInstallmentSelectedAndWithoutTokenThenStartSecurityCodeFlow() {
         configureMockedCardWith();
         final Card card = userSelectionRepository.getCard();
-        when(IESCManager.getESC(card.getId(), "XXXX", card.getLastFourDigits()))
+        when(IESCManager.getESC(card.getId(), card.getFirstSixDigits(), card.getLastFourDigits()))
             .thenReturn(TextUtil.EMPTY);
 
         presenter.resolveInstallmentsRequest();
@@ -169,7 +169,7 @@ public class CardVaultPresenterTest {
     public void verifyResolvesOnSelectedPayerCostPayerCostListWithoutESC() {
         configureMockedCardWith();
         final Card card = userSelectionRepository.getCard();
-        when(IESCManager.getESC(card.getId(), "XXXX", card.getLastFourDigits()))
+        when(IESCManager.getESC(card.getId(), card.getFirstSixDigits(), card.getLastFourDigits()))
             .thenReturn(TextUtil.EMPTY);
 
         presenter.onSelectedPayerCost();
@@ -182,7 +182,7 @@ public class CardVaultPresenterTest {
     public void verifyResolvesOnSelectedPayerCostPayerCostListWithESC() {
         configureMockedCardWith();
         final Card card = userSelectionRepository.getCard();
-        when(IESCManager.getESC(card.getId(), "XXXX", card.getLastFourDigits()))
+        when(IESCManager.getESC(card.getId(), card.getFirstSixDigits(), card.getLastFourDigits()))
             .thenReturn("1");
 
         presenter.onSelectedPayerCost();

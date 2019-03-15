@@ -16,7 +16,7 @@ import retrofit2.http.Query;
 
 public interface CheckoutService {
 
-    String GROUPS_VERSION = "1.9";
+    String GROUPS_VERSION = "2.0";
 
     @POST("/{version}/px_mobile_api/payment_methods?api_version=" + GROUPS_VERSION)
     MPCall<PaymentMethodSearch> getPaymentMethodSearch(
