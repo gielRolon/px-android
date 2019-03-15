@@ -18,6 +18,8 @@ public class UserSelectionService implements UserSelectionRepository {
     private static final String PREF_SELECTED_PAYER_COST = "PREF_SELECTED_INSTALLMENT";
     private static final String PREF_SELECTED_ISSUER = "PREF_SELECTED_ISSUER";
     private static final String PREF_PAYMENT_TYPE = "PREF_SELECTED_PAYMENT_TYPE";
+    private static final String PREF_LAST_SELECTED_PM = "PREF_LAST_SELECTED_PAYMENT_METHOD";
+    private static final String PREF_DISABLE_LAST_SELECTED_PM = "PREF_DISABLE_LAST_SELECTED_PAYMENT_METHOD";
 
     @NonNull private final SharedPreferences sharedPreferences;
     @NonNull private final JsonUtil jsonUtil;
@@ -52,6 +54,18 @@ public class UserSelectionService implements UserSelectionRepository {
         removePaymentMethodSelection();
         removeIssuerSelection();
         removePayerCostSelection();
+    }
+
+    @Override
+    public void removeLastPaymentMethodSelected() {
+        sharedPreferences.edit().remove(PREF_LAST_SELECTED_PM).apply();
+    }
+
+    @Override
+    public void clearDisableLastPaymentMethodSelection() {
+        sharedPreferences.edit()
+            .putBoolean(PREF_DISABLE_LAST_SELECTED_PM, false)
+            .apply();
     }
 
     @Override
@@ -113,6 +127,24 @@ public class UserSelectionService implements UserSelectionRepository {
     }
 
     @Override
+    public void select(@Nullable final PaymentMethod lastSelectedPaymentMethod) {
+        if (lastSelectedPaymentMethod == null) {
+            removeLastPaymentMethodSelected();
+        } else {
+            sharedPreferences.edit()
+                .putString(PREF_LAST_SELECTED_PM, jsonUtil.toJson(lastSelectedPaymentMethod))
+                .apply();
+        }
+    }
+
+    @Override
+    public void select(final boolean disableLastPaymentMethodSelection) {
+        sharedPreferences.edit()
+            .putBoolean(PREF_DISABLE_LAST_SELECTED_PM, disableLastPaymentMethodSelection)
+            .apply();
+    }
+
+    @Override
     @Nullable
     public PaymentMethod getPaymentMethod() {
         return jsonUtil.fromJson(sharedPreferences.getString(PREF_PRIMARY_SELECTED_PM, TextUtil.EMPTY),
@@ -149,6 +181,18 @@ public class UserSelectionService implements UserSelectionRepository {
     @Override
     public String getPaymentType() {
         return sharedPreferences.getString(PREF_PAYMENT_TYPE, TextUtil.EMPTY);
+    }
+
+    @Nullable
+    @Override
+    public PaymentMethod getLastPaymentMethodSelected() {
+        return jsonUtil
+            .fromJson(sharedPreferences.getString(PREF_LAST_SELECTED_PM, TextUtil.EMPTY), PaymentMethod.class);
+    }
+
+    @Override
+    public boolean shouldDisableLastPaymentMethodSelected() {
+        return sharedPreferences.getBoolean(PREF_DISABLE_LAST_SELECTED_PM, false);
     }
 
     @Override

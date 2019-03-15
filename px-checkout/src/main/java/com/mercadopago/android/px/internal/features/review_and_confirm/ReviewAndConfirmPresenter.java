@@ -216,7 +216,7 @@ import java.util.Set;
             }
 
             @Override
-            public void onChangePaymentMethod() {
+            public void onChangePaymentMethod(final boolean shouldDisableLastPaymentMethod) {
                 //do nothing
             }
         });

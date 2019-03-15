@@ -10,8 +10,8 @@ import android.support.annotation.Nullable;
 public abstract class PostPaymentAction implements Parcelable {
 
     private static final String EXTRA_POST_PAYMENT_ACTION = "extra_post_payment_action";
-    @NonNull protected final RequiredAction requiredAction;
-    @NonNull protected final OriginAction originAction;
+    @NonNull private final RequiredAction requiredAction;
+    @NonNull /* default */ final OriginAction originAction;
 
     public PostPaymentAction(@NonNull final RequiredAction requiredAction, @NonNull final OriginAction originAction) {
         this.requiredAction = requiredAction;
@@ -36,10 +36,8 @@ public abstract class PostPaymentAction implements Parcelable {
         dest.writeInt(originAction.ordinal());
     }
 
-    @NonNull
-    public Intent addToIntent(@NonNull final Intent intent) {
+    public void addToIntent(@NonNull final Intent intent) {
         intent.putExtra(EXTRA_POST_PAYMENT_ACTION, this);
-        return intent;
     }
 
     public static boolean hasPostPaymentAction(@Nullable final Intent intent) {
@@ -49,14 +47,10 @@ public abstract class PostPaymentAction implements Parcelable {
     @NonNull
     public static PostPaymentAction fromBundle(@NonNull final Bundle bundle) {
         final PostPaymentAction action = bundle.getParcelable(EXTRA_POST_PAYMENT_ACTION);
-        switch (action.requiredAction) {
-        case RECOVER_PAYMENT:
-            return new RecoverPaymentPostPaymentAction(action.originAction);
-        case SELECT_OTHER_PAYMENT_METHOD:
-            return new ChangePaymentMethodPostPaymentAction();
-        default:
-            throw new IllegalStateException("Impossible to create PostPaymentAction");
+        if(action == null){
+            throw new IllegalStateException("Impossible to obtain PostPaymentAction");
         }
+        return action;
     }
 
     public enum RequiredAction {
@@ -72,6 +66,6 @@ public abstract class PostPaymentAction implements Parcelable {
 
         void recoverFromOneTap();
 
-        void onChangePaymentMethod();
+        void onChangePaymentMethod(final boolean shouldDisableLastPaymentMethod);
     }
 }

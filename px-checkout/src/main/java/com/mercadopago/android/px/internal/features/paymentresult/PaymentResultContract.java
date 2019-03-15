@@ -29,7 +29,7 @@ public interface PaymentResultContract {
 
         void finishWithResult(final int resultCode);
 
-        void changePaymentMethod();
+        void changePaymentMethod(final boolean shouldDisableLastPaymentMethod);
 
         void recoverPayment(@NonNull final PostPaymentAction.OriginAction originAction);
 

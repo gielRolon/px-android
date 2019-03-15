@@ -217,11 +217,6 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
     }
 
     private void showAvailableOptions() {
-        final Collection<PaymentMethodPlugin> paymentMethodPluginList =
-            pluginRepository.getEnabledPlugins();
-
-        getView().showPluginOptions(paymentMethodPluginList, PaymentMethodPlugin.PluginPosition.TOP);
-
         if (paymentMethodSearch.hasCustomSearchItems()) {
             final List<CustomSearchItem> shownCustomItems;
             shownCustomItems = paymentMethodSearch.getCustomSearchItems();
@@ -233,8 +228,6 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
         }
 
         trackScreen();
-
-        getView().showPluginOptions(paymentMethodPluginList, PaymentMethodPlugin.PluginPosition.BOTTOM);
     }
 
     private OnSelectedCallback<PaymentMethodSearchItem> getPaymentMethodSearchItemSelectionCallback() {

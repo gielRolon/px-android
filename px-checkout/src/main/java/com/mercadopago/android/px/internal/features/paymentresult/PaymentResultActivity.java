@@ -225,9 +225,9 @@ public class PaymentResultActivity extends PXActivity<PaymentResultPresenter> im
     }
 
     @Override
-    public void changePaymentMethod() {
+    public void changePaymentMethod(final boolean shouldDisableLastPaymentMethod) {
         final Intent returnIntent = new Intent();
-        new ChangePaymentMethodPostPaymentAction().addToIntent(returnIntent);
+        ChangePaymentMethodPostPaymentAction.create(shouldDisableLastPaymentMethod).addToIntent(returnIntent);
         setResult(RESULT_ACTION, returnIntent);
         finish();
     }

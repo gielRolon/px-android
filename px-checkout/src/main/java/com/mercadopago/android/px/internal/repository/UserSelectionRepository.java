@@ -19,13 +19,26 @@ public interface UserSelectionRepository {
 
     void select(String paymentType);
 
+    void select(@Nullable final PaymentMethod lastSelectedPaymentMethod);
+
+    void select(final boolean disableLastPaymentMethodSelection);
+
     @Nullable
     PaymentMethod getPaymentMethod();
 
     @Nullable
     PaymentMethod getSecondaryPaymentMethod();
 
+    @Nullable
+    PaymentMethod getLastPaymentMethodSelected();
+
+    boolean shouldDisableLastPaymentMethodSelected();
+
     void removePaymentMethodSelection();
+
+    void removeLastPaymentMethodSelected();
+
+    void clearDisableLastPaymentMethodSelection();
 
     boolean hasPayerCostSelected();
 

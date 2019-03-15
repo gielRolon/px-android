@@ -25,6 +25,7 @@ import com.mercadopago.android.px.model.IPaymentDescriptor;
 import com.mercadopago.android.px.model.IPaymentDescriptorHandler;
 import com.mercadopago.android.px.model.IPayment;
 import com.mercadopago.android.px.model.Payment;
+import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentResult;
@@ -496,8 +497,13 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     //TODO separate with better navigation when we have a proper driver.
     @Override
-    public void onChangePaymentMethod() {
+    public void onChangePaymentMethod(final boolean shouldDisableLastPaymentMethod) {
         state.paymentMethodEdited = true;
+        if(shouldDisableLastPaymentMethod) {
+            final PaymentMethod paymentMethod = userSelectionRepository.getPaymentMethod();
+            userSelectionRepository.select(paymentMethod);
+            userSelectionRepository.select(true);
+        }
         getView().transitionOut();
 
         if (internalConfiguration.shouldExitOnPaymentMethodChange()) {
@@ -514,6 +520,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     //TODO separate with better navigation when we have a proper driver.
     public void onChangePaymentMethodFromReviewAndConfirm() {
-        onChangePaymentMethod();
+        onChangePaymentMethod(false);
     }
 }

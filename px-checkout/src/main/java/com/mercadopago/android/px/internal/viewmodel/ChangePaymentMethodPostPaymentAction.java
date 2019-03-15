@@ -5,17 +5,26 @@ import android.support.annotation.NonNull;
 
 public class ChangePaymentMethodPostPaymentAction extends PostPaymentAction {
 
-    public ChangePaymentMethodPostPaymentAction() {
+    public static ChangePaymentMethodPostPaymentAction create(final boolean shouldDisableLastPaymentMethod) {
+        final ChangePaymentMethodPostPaymentAction instance = new ChangePaymentMethodPostPaymentAction();
+        instance.shouldDisableLastPaymentMethod = shouldDisableLastPaymentMethod;
+        return instance;
+    }
+
+    private boolean shouldDisableLastPaymentMethod = false;
+
+    /* default */ ChangePaymentMethodPostPaymentAction() {
         super(RequiredAction.SELECT_OTHER_PAYMENT_METHOD, OriginAction.UNKNOWN);
     }
 
     /* default */ ChangePaymentMethodPostPaymentAction(final Parcel in) {
         super(in);
+        shouldDisableLastPaymentMethod = in.readByte() == 1;
     }
 
     @Override
     public void execute(@NonNull final ActionController actionController) {
-        actionController.onChangePaymentMethod();
+        actionController.onChangePaymentMethod(shouldDisableLastPaymentMethod);
     }
 
     public static final Creator<ChangePaymentMethodPostPaymentAction> CREATOR =
@@ -30,4 +39,10 @@ public class ChangePaymentMethodPostPaymentAction extends PostPaymentAction {
                 return new ChangePaymentMethodPostPaymentAction[size];
             }
         };
+
+    @Override
+    public void writeToParcel(final Parcel dest, final int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeByte((byte) (shouldDisableLastPaymentMethod ? 1 : 0));
+    }
 }

@@ -29,8 +29,6 @@ public interface PaymentVaultView extends MvpView {
     void showCustomOptions(List<CustomSearchItem> customSearchItems,
         OnSelectedCallback<CustomSearchItem> customSearchItemOnSelectedCallback);
 
-    void showPluginOptions(Collection<PaymentMethodPlugin> items, PaymentMethodPlugin.PluginPosition position);
-
     void showSearchItems(List<PaymentMethodSearchItem> searchItems,
         OnSelectedCallback<PaymentMethodSearchItem> paymentMethodSearchItemSelectionCallback);
 

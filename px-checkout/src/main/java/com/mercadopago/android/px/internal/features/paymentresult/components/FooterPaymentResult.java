@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.features.review_and_confirm.components.actions.ChangePaymentMethodAction;
 import com.mercadopago.android.px.internal.view.ActionDispatcher;
@@ -16,7 +15,6 @@ import com.mercadopago.android.px.internal.view.NextAction;
 import com.mercadopago.android.px.internal.view.RecoverPaymentAction;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentResult;
-
 import javax.annotation.Nonnull;
 
 public class FooterPaymentResult extends CompactComponent<PaymentResult, ActionDispatcher> {
@@ -43,16 +41,16 @@ public class FooterPaymentResult extends CompactComponent<PaymentResult, ActionD
 
             linkAction = new Button.Props(context.getString(R.string.px_got_it), new NextAction());
         } else if (props.isStatusRejected()) {
-
+            final String statusDetail = props.getPaymentStatusDetail();
             if (Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_CARD_DISABLED
-                .equals(props.getPaymentStatusDetail())) {
+                .equals(statusDetail)) {
 
                 buttonAction =
                     new Button.Props(context.getString(R.string.px_text_card_enabled), new RecoverPaymentAction());
                 linkAction =
                     new Button.Props(context.getString(R.string.px_text_pay_with_other_method),
                         new ChangePaymentMethodAction());
-            } else if (Payment.StatusDetail.isBadFilled(props.getPaymentStatusDetail())) {
+            } else if (Payment.StatusDetail.isBadFilled(statusDetail)) {
 
                 buttonAction =
                     new Button.Props(context.getString(R.string.px_text_some_card_data_is_incorrect),
@@ -61,16 +59,21 @@ public class FooterPaymentResult extends CompactComponent<PaymentResult, ActionD
                     new Button.Props(context.getString(R.string.px_text_pay_with_other_method),
                         new ChangePaymentMethodAction());
             } else if (Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_DUPLICATED_PAYMENT
-                .equals(props.getPaymentStatusDetail())) {
+                .equals(statusDetail)) {
                 linkAction = new Button.Props(context.getString(R.string.px_got_it), new NextAction());
             } else if (Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE
-                .equalsIgnoreCase(props.getPaymentStatusDetail())) {
+                .equalsIgnoreCase(statusDetail)) {
                 buttonAction =
                     new Button.Props(context.getString(R.string.px_text_authorized_call_for_authorize),
                         new RecoverPaymentAction());
                 linkAction =
                     new Button.Props(context.getString(R.string.px_text_pay_with_other_method),
                         new ChangePaymentMethodAction());
+            } else if (Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_HIGH_RISK.equals(statusDetail) ||
+                Payment.StatusDetail.STATUS_DETAIL_REJECTED_HIGH_RISK.equals(statusDetail)) {
+                buttonAction =
+                    new Button.Props(context.getString(R.string.px_text_pay_with_other_method),
+                        ChangePaymentMethodAction.createWithDisableLastPaymentMethod());
             } else {
                 buttonAction =
                     new Button.Props(context.getString(R.string.px_text_pay_with_other_method),

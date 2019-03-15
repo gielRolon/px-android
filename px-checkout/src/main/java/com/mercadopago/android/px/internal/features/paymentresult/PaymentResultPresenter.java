@@ -152,7 +152,7 @@ import java.util.List;
             getView().finishWithResult(((ResultCodeAction) action).resultCode);
         } else if (action instanceof ChangePaymentMethodAction) {
             ChangePaymentMethodEvent.with(resultViewTrack).track();
-            getView().changePaymentMethod();
+            getView().changePaymentMethod(((ChangePaymentMethodAction) action).shouldDisableLastPaymentMethod());
         } else if (action instanceof RecoverPaymentAction) {
             getView().recoverPayment(originAction);
         } else if (action instanceof LinkAction) {
