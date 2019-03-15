@@ -6,10 +6,6 @@ import java.util.Set;
 
 public interface IESCManager {
 
-    // Todo remove old way to get esc.
-    @Deprecated
-    String getESC(@Nullable final String cardId);
-
     String getESC(@Nullable final String cardId, @NonNull final String firstDigits, @NonNull final String lastDigits);
 
     boolean saveESCWith(@NonNull final String cardId, @NonNull final String esc);

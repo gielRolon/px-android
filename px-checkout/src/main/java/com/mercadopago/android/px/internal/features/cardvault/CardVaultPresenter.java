@@ -255,7 +255,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         if (!TextUtil.isEmpty(esc)) {
             return true;
         } else {
-            setESC(IESCManager.getESC(card.getId()));
+            setESC(IESCManager.getESC(card.getId(), "XXXX", card.getLastFourDigits()));
             return !TextUtil.isEmpty(esc);
         }
     }

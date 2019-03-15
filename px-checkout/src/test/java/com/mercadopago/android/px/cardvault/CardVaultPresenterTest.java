@@ -10,10 +10,10 @@ import com.mercadopago.android.px.internal.repository.AmountConfigurationReposit
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.internal.util.TextUtil;
+import com.mercadopago.android.px.model.AmountConfiguration;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.Issuer;
 import com.mercadopago.android.px.model.PayerCost;
-import com.mercadopago.android.px.model.AmountConfiguration;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.preferences.PaymentPreference;
@@ -114,7 +114,9 @@ public class CardVaultPresenterTest {
     @Test
     public void whenGuessingCardHasInstallmentSelectedAndWithoutTokenThenStartSecurityCodeFlow() {
         configureMockedCardWith();
-        when(IESCManager.getESC(userSelectionRepository.getCard().getId())).thenReturn(TextUtil.EMPTY);
+        final Card card = userSelectionRepository.getCard();
+        when(IESCManager.getESC(card.getId(), "XXXX", card.getLastFourDigits()))
+            .thenReturn(TextUtil.EMPTY);
 
         presenter.resolveInstallmentsRequest();
 
@@ -166,7 +168,9 @@ public class CardVaultPresenterTest {
     @Test
     public void verifyResolvesOnSelectedPayerCostPayerCostListWithoutESC() {
         configureMockedCardWith();
-        when(IESCManager.getESC(userSelectionRepository.getCard().getId())).thenReturn(TextUtil.EMPTY);
+        final Card card = userSelectionRepository.getCard();
+        when(IESCManager.getESC(card.getId(), "XXXX", card.getLastFourDigits()))
+            .thenReturn(TextUtil.EMPTY);
 
         presenter.onSelectedPayerCost();
 
@@ -177,7 +181,9 @@ public class CardVaultPresenterTest {
     @Test
     public void verifyResolvesOnSelectedPayerCostPayerCostListWithESC() {
         configureMockedCardWith();
-        when(IESCManager.getESC(userSelectionRepository.getCard().getId())).thenReturn("1");
+        final Card card = userSelectionRepository.getCard();
+        when(IESCManager.getESC(card.getId(), "XXXX", card.getLastFourDigits()))
+            .thenReturn("1");
 
         presenter.onSelectedPayerCost();
 

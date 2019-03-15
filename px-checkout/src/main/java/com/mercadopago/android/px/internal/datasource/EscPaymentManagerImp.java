@@ -19,7 +19,7 @@ public class EscPaymentManagerImp implements EscPaymentManager {
 
     @Override
     public boolean hasEsc(@NonNull final Card card) {
-        return !TextUtil.isEmpty(escManager.getESC(card.getId()));
+        return !TextUtil.isEmpty(escManager.getESC(card.getId(), "XXXX", card.getLastFourDigits()));
     }
 
     @Override

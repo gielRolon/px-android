@@ -35,12 +35,16 @@ public class TokenizeService implements TokenRepository {
         return new MPCall<Token>() {
             @Override
             public void enqueue(final Callback<Token> callback) {
-                serviceCallWrapp(card.getId(), IESCManager.getESC(card.getId())).enqueue(wrap(card, callback));
+                serviceCallWrapp(card.getId(),
+                    IESCManager.getESC(card.getId(), "XXXX", card.getLastFourDigits()))
+                    .enqueue(wrap(card, callback));
             }
 
             @Override
             public void execute(final Callback<Token> callback) {
-                serviceCallWrapp(card.getId(), IESCManager.getESC(card.getId())).enqueue(wrap(card, callback));
+                serviceCallWrapp(card.getId(),
+                    IESCManager.getESC(card.getId(), "XXXX", card.getLastFourDigits()))
+                    .enqueue(wrap(card, callback));
             }
         };
     }

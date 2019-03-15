@@ -46,11 +46,6 @@ public final class ReflectiveESCManager implements IESCManager {
         }
     }
 
-    @Override
-    public String getESC(@Nullable final String cardId) {
-        return getESC(cardId, "", "");
-    }
-
     @Nullable
     @Override
     public String getESC(@Nullable final String cardId, @NonNull final String firstDigits,

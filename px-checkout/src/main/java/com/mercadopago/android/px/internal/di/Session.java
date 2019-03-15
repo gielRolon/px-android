@@ -341,7 +341,8 @@ public final class Session extends ApplicationModule
                 RetrofitUtil.getRetrofitClient(getContext()).create(GatewayService.class);
             cardTokenRepository =
                 new CardTokenService(gatewayService, getConfigurationModule().getPaymentSettings(),
-                    new Device(getContext()));
+                    new Device(getContext()),
+                    getMercadoPagoESC());
         }
         return cardTokenRepository;
     }
