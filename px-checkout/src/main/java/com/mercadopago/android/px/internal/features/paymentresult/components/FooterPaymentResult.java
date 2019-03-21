@@ -70,7 +70,8 @@ public class FooterPaymentResult extends CompactComponent<PaymentResult, ActionD
                     new Button.Props(context.getString(R.string.px_text_pay_with_other_method),
                         new ChangePaymentMethodAction());
             } else if (Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_HIGH_RISK.equals(statusDetail) ||
-                Payment.StatusDetail.STATUS_DETAIL_REJECTED_HIGH_RISK.equals(statusDetail)) {
+                Payment.StatusDetail.STATUS_DETAIL_REJECTED_HIGH_RISK.equals(statusDetail) ||
+                Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_BLACKLIST.equals(statusDetail)) {
                 buttonAction =
                     new Button.Props(context.getString(R.string.px_text_pay_with_other_method),
                         ChangePaymentMethodAction.createWithDisableLastPaymentMethod());
