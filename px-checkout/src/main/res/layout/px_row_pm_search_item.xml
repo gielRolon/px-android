@@ -14,12 +14,13 @@
         android:orientation="vertical">
 
         <FrameLayout
-            android:layout_width="@dimen/px_xl_alternative_1_height"
+            android:layout_width="@dimen/px_xxxl_alternative_1_height"
             android:layout_height="wrap_content">
 
             <FrameLayout
                 android:layout_width="@dimen/px_xl_height"
                 android:layout_height="@dimen/px_xl_height"
+                android:layout_gravity="center_horizontal"
                 android:background="@drawable/px_light_grey_circle">
 
                 <ImageView
