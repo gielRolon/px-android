@@ -27,6 +27,7 @@
     <dimen name="px_payer_cost_small_text">20dp</dimen>
     <dimen name="px_payer_cost_total_small_text">14dp</dimen>
     <dimen name="px_title_pager_padding_right">68dp</dimen>
+    <dimen name="px_badge_size">25dp</dimen>
 
     <!-- Payment result components -->
 
@@ -40,6 +41,7 @@
     <dimen name="px_xxs_margin">8dp</dimen>
     <dimen name="px_xxxs_margin">4dp</dimen>
 
+    <dimen name="px_xl_alternative_margin">38dp</dimen>
     <dimen name="px_l_alternative_margin">30dp</dimen>
     <dimen name="px_m_alternative_margin">25dp</dimen>
     <dimen name="px_m_alternative_1_margin">22dp</dimen>
@@ -59,11 +61,13 @@
     <dimen name="px_xxxs_height">1dp</dimen>
     <dimen name="px_zero_height">0dp</dimen>
 
+    <dimen name="px_xl_alternative_1_height">88dp</dimen>
+
     <dimen name="px_promotion_logo_width">120dp</dimen>
 
     <!-- Text -->
     <dimen name="px_xxxl_text">26dp</dimen>
-    <!--<dimen name="px_xxl_text">24dp</dimen>-->
+    <dimen name="px_xxl_text">24dp</dimen>
     <dimen name="px_xl_text">22dp</dimen>
     <dimen name="px_l_text">20dp</dimen>
     <dimen name="px_l_alternative_1_text">19dp</dimen>

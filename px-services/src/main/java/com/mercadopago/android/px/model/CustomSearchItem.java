@@ -2,14 +2,27 @@ package com.mercadopago.android.px.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CustomSearchItem implements Serializable, Parcelable {
+
+    private static final Comparator<CustomSearchItem> AVAILABILITY_ORDER = (o1, o2) -> {
+        if (o1.isDisabled() && !o2.isDisabled()) {
+            return 1;
+        } else if (!o1.isDisabled() && o2.isDisabled()) {
+            return -1;
+        }
+        return 0;
+    };
 
     //TODO make final when deprecate custom search item constructor.
     private String description;
@@ -26,6 +39,12 @@ public class CustomSearchItem implements Serializable, Parcelable {
     private String defaultAmountConfiguration;
     private Map<String, AmountConfiguration> amountConfigurations;
 
+    private boolean disabled;
+
+    public static void orderListByAvailability(@NonNull final List<CustomSearchItem> items){
+        Collections.sort(items, AVAILABILITY_ORDER);
+    }
+
     @Deprecated
     public CustomSearchItem() {
         amountConfigurations = new HashMap<>();
@@ -41,6 +60,7 @@ public class CustomSearchItem implements Serializable, Parcelable {
         defaultAmountConfiguration = in.readString();
         amountConfigurations = new HashMap<>();
         in.readMap(amountConfigurations, CustomSearchItem.class.getClassLoader());
+        disabled = in.readByte() == 1;
     }
 
     public static final Creator<CustomSearchItem> CREATOR = new Creator<CustomSearchItem>() {
@@ -103,6 +123,7 @@ public class CustomSearchItem implements Serializable, Parcelable {
         dest.writeString(discountInfo);
         dest.writeString(defaultAmountConfiguration);
         dest.writeMap(amountConfigurations);
+        dest.writeByte((byte) (disabled ? 1 : 0));
     }
 
     @Deprecated
@@ -127,5 +148,13 @@ public class CustomSearchItem implements Serializable, Parcelable {
 
     public boolean hasDiscountInfo() {
         return !TextUtils.isEmpty(discountInfo);
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(final boolean disabled) {
+        this.disabled = disabled;
     }
 }

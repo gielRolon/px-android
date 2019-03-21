@@ -248,4 +248,9 @@
     <!-- Boleto -->
     <string name="px_fill_your_data">Ingrese sus datos…</string>
     <string name="px_bolbradesco_rejection">No fue posible procesar su pago</string>
+
+    <!-- Disable payment method detail dialog -->
+    <string name="px_dialog_detail_payment_method_disable_title">Esta tarjeta no está disponible ahora</string>
+    <string name="px_dialog_detail_payment_method_disable_detail">No te preocupes, puedes usar otro medio para completar el pago.</string>
+    <string name="px_dialog_detail_payment_method_disable_link">Pagar con otro medio</string>
 </resources>

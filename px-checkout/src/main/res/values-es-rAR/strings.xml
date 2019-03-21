@@ -3,4 +3,9 @@
     <string name="px_homebanking">Home Banking de</string>
     <string name="px_card_installments_title">¿En cuántas cuotas?</string>
     <string name="px_error_message_invalid_installments">Número de cuotas inválido</string>
+
+    <!-- Disable payment method detail dialog -->
+    <string name="px_dialog_detail_payment_method_disable_title">Esta tarjeta no está disponible ahora</string>
+    <string name="px_dialog_detail_payment_method_disable_detail">No te preocupes, podés usar otro medio para completar el pago.</string>
+    <string name="px_dialog_detail_payment_method_disable_link">Pagar con otro medio</string>
 </resources>

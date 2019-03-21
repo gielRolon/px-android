@@ -1,38 +1,51 @@
 <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@android:color/transparent"
     android:minHeight="45dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:gravity="center"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <FrameLayout
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:background="@drawable/px_light_grey_circle">
+            android:layout_width="@dimen/px_xl_alternative_1_height"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:layout_width="@dimen/px_xl_height"
+                android:layout_height="@dimen/px_xl_height"
+                android:background="@drawable/px_light_grey_circle">
+
+                <ImageView
+                    android:id="@+id/mpsdkImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:maxWidth="@dimen/px_xl_height"
+                    android:padding="@dimen/px_s_margin"
+                    tools:src="@drawable/px_bapropagos"/>
+            </FrameLayout>
 
             <ImageView
-                android:adjustViewBounds="true"
-                android:id="@+id/mpsdkImage"
-                android:padding="16dp"
-                android:maxWidth="80dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                tools:src="@drawable/px_bapropagos"/>
+                android:id="@+id/mpsdkIconBadge"
+                android:layout_width="@dimen/px_badge_size"
+                android:layout_height="@dimen/px_badge_size"
+                android:layout_gravity="top|right"
+                android:visibility="gone"
+                android:src="@drawable/px_badge_warning"/>
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/px_xxxs_alternative_1_margin"
             android:gravity="top"
             android:orientation="vertical">
 
@@ -42,9 +55,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:maxLines="3"
-                tools:text="Transferencia por Red Link"
-                android:textSize="16dp"
-                android:textColor="@color/px_form_text"/>
+                android:textColor="@color/px_form_text"
+                android:textSize="@dimen/px_s_text"
+                tools:text="Transferencia por Red Link"/>
 
             <com.mercadopago.android.px.internal.view.MPTextView
                 android:id="@+id/mpsdkDiscountInfo"
@@ -52,19 +65,19 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:maxLines="1"
-                tools:text="%50 OFF"
-                android:textSize="14dp"
                 android:textColor="@color/px_discount_description"
-                android:visibility="gone"/>
+                android:textSize="@dimen/px_xs_text"
+                android:visibility="gone"
+                tools:text="%50 OFF"/>
 
             <com.mercadopago.android.px.internal.view.MPTextView
                 android:id="@+id/mpsdkComment"
+                style="@style/px_list_label_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
-                tools:text="Hola, soy un comentario"
                 android:gravity="center"
-                style="@style/px_list_label_comment"/>
+                android:textSize="@dimen/px_xs_text"
+                tools:text="Hola, soy un comentario"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -265,4 +265,9 @@
     <string name="px_bolbradesco_rejection">Payment could not be processed</string>
     <string name="px_cpf_card_holder_identification_hint" translatable="false">*********-**</string>
     <string name="px_cnpj_card_holder_identification_hint" translatable="false">********/****-**</string>
+
+    <!-- Disable payment method detail dialog -->
+    <string name="px_dialog_detail_payment_method_disable_title">This card is currently unavailable</string>
+    <string name="px_dialog_detail_payment_method_disable_detail">Don’t worry, you can use another method to complete the payment.</string>
+    <string name="px_dialog_detail_payment_method_disable_link">Pay with a different method</string>
 </resources>

@@ -20,6 +20,7 @@ import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.internal.controllers.CheckoutTimer;
 import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolverImpl;
 import com.mercadopago.android.px.internal.di.Session;
+import com.mercadopago.android.px.internal.features.disable_payment_method.DisablePaymentMethodDetailDialog;
 import com.mercadopago.android.px.internal.features.payer_information.PayerInformationActivity;
 import com.mercadopago.android.px.internal.features.uicontrollers.FontCache;
 import com.mercadopago.android.px.internal.features.uicontrollers.paymentmethodsearch.PaymentMethodSearchCustomOption;
@@ -530,4 +531,10 @@ public class PaymentVaultActivity extends PXActivity<PaymentVaultPresenter> impl
     public void hideAmountRow() {
         amountView.setVisibility(View.GONE);
     }
+
+    @Override
+    public void showDisabledPaymentMethodDetailDialog() {
+        DisablePaymentMethodDetailDialog.showDialog(getSupportFragmentManager());
+    }
+
 }

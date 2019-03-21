@@ -173,4 +173,9 @@
     <color name="px_expressCheckoutScrollIndicatorColor">@color/px_expressCheckoutSeparatorLine</color>
     <color name="px_expressCheckoutChangePaymentMethodColor">#ffeae8e8</color>
     <color name="px_expressCheckoutInstallmentTitle">#73000000</color>
+
+    <!-- Disable payment method detail dialog -->
+    <color name="px_disablePaymentMethodDetailDialogTitle">#CC000000</color>
+    <color name="px_disablePaymentMethodDetailDialogDetail">@color/px_disablePaymentMethodDetailDialogTitle</color>
+    <color name="px_disablePaymentMethodDetailDialogLink">#3483FA</color>
 </resources>

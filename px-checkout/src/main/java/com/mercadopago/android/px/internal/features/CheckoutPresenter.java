@@ -29,6 +29,7 @@ import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentResult;
+import com.mercadopago.android.px.model.PaymentTypes;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.CheckoutPreferenceException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
@@ -500,9 +501,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     public void onChangePaymentMethod(final boolean shouldDisableLastPaymentMethod) {
         state.paymentMethodEdited = true;
         if(shouldDisableLastPaymentMethod) {
-            final PaymentMethod paymentMethod = userSelectionRepository.getPaymentMethod();
-            userSelectionRepository.select(paymentMethod);
-            userSelectionRepository.select(true);
+            saveLastUserSelection();
         }
         getView().transitionOut();
 
@@ -516,6 +515,17 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         } else {
             getView().showPaymentMethodSelection();
         }
+    }
+
+    private void saveLastUserSelection() {
+        final PaymentMethod paymentMethod = userSelectionRepository.getPaymentMethod();
+        if(paymentMethod != null && PaymentTypes.isCardPaymentType(paymentMethod.getPaymentTypeId())) {
+            final Card card = userSelectionRepository.getCard();
+            userSelectionRepository.select(card);
+        } else {
+            userSelectionRepository.select(paymentMethod);
+        }
+        userSelectionRepository.select(true);
     }
 
     //TODO separate with better navigation when we have a proper driver.

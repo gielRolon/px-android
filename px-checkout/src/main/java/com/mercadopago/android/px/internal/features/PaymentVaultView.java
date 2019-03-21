@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.internal.features;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.android.px.core.PaymentMethodPlugin;
 import com.mercadopago.android.px.internal.base.MvpView;
 import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.model.Card;
@@ -13,7 +12,6 @@ import com.mercadopago.android.px.model.Site;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.preferences.PaymentPreference;
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.List;
 
 public interface PaymentVaultView extends MvpView {
@@ -57,4 +55,6 @@ public interface PaymentVaultView extends MvpView {
     void showEmptyPaymentMethodsError();
 
     void showMismatchingPaymentMethodError();
+
+    void showDisabledPaymentMethodDetailDialog();
 }

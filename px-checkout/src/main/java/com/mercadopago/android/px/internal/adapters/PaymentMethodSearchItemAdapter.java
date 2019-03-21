@@ -52,11 +52,11 @@ public class PaymentMethodSearchItemAdapter extends RecyclerView.Adapter<Payment
         notifyItemInserted(mItems.size() - 1);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static final class ViewHolder extends RecyclerView.ViewHolder {
 
         private final CustomViewController mViewController;
 
-        public ViewHolder(CustomViewController viewController) {
+        public ViewHolder(final CustomViewController viewController) {
             super(viewController.getView());
             mViewController = viewController;
             mViewController.initializeControls();

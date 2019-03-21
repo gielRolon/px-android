@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.util.MercadoPagoUtil;
+import com.mercadopago.android.px.internal.util.ViewUtils;
 import com.mercadopago.android.px.internal.view.MPTextView;
 import com.mercadopago.android.px.model.CustomSearchItem;
 
@@ -19,6 +20,7 @@ public class PaymentMethodSearchCustomOption implements PaymentMethodSearchViewC
     protected MPTextView comment;
     protected MPTextView discountInfo;
     protected ImageView icon;
+    protected ImageView badge;
     protected View.OnClickListener listener;
 
     public PaymentMethodSearchCustomOption(final Context context, final CustomSearchItem item) {
@@ -47,6 +49,7 @@ public class PaymentMethodSearchCustomOption implements PaymentMethodSearchViewC
         comment = view.findViewById(R.id.mpsdkComment);
         discountInfo = view.findViewById(R.id.mpsdkDiscountInfo);
         icon = view.findViewById(R.id.mpsdkImage);
+        badge = view.findViewById(R.id.mpsdkIconBadge);
     }
 
     @Override
@@ -63,6 +66,13 @@ public class PaymentMethodSearchCustomOption implements PaymentMethodSearchViewC
             icon.setImageResource(resourceId);
         } else {
             icon.setVisibility(View.GONE);
+        }
+
+        if(item.isDisabled()){
+            ViewUtils.grayScaleView(icon);
+            badge.setVisibility(View.VISIBLE);
+        }else{
+            badge.setVisibility(View.GONE);
         }
 
         if (item.hasDiscountInfo()) {

@@ -21,6 +21,8 @@ public interface UserSelectionRepository {
 
     void select(@Nullable final PaymentMethod lastSelectedPaymentMethod);
 
+    void select(@Nullable final Card lastSelectedCard);
+
     void select(final boolean disableLastPaymentMethodSelection);
 
     @Nullable
@@ -32,11 +34,16 @@ public interface UserSelectionRepository {
     @Nullable
     PaymentMethod getLastPaymentMethodSelected();
 
+    @Nullable
+    Card getLastCardSelected();
+
     boolean shouldDisableLastPaymentMethodSelected();
 
     void removePaymentMethodSelection();
 
     void removeLastPaymentMethodSelected();
+
+    void removeLastCardSelected();
 
     void clearDisableLastPaymentMethodSelection();
 

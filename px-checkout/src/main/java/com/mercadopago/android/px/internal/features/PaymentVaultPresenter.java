@@ -1,14 +1,12 @@
 package com.mercadopago.android.px.internal.features;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.core.PaymentMethodPlugin;
-import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolver;
-import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolverImpl;
 import com.mercadopago.android.px.internal.base.BasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
+import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolver;
 import com.mercadopago.android.px.internal.features.uicontrollers.AmountRowController;
 import com.mercadopago.android.px.internal.navigation.DefaultPayerInformationDriver;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
@@ -31,7 +29,6 @@ import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.services.Callback;
 import com.mercadopago.android.px.tracking.internal.views.SelectMethodChildView;
 import com.mercadopago.android.px.tracking.internal.views.SelectMethodView;
-import java.util.Collection;
 import java.util.List;
 
 public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> implements AmountView.OnClick,
@@ -220,6 +217,7 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
         if (paymentMethodSearch.hasCustomSearchItems()) {
             final List<CustomSearchItem> shownCustomItems;
             shownCustomItems = paymentMethodSearch.getCustomSearchItems();
+            updateCustomSearchItemsStatus(shownCustomItems);
             getView().showCustomOptions(shownCustomItems, getCustomOptionCallback());
         }
 
@@ -240,10 +238,11 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
     }
 
     private OnSelectedCallback<CustomSearchItem> getCustomOptionCallback() {
-        return new OnSelectedCallback<CustomSearchItem>() {
-            @Override
-            public void onSelected(final CustomSearchItem searchItem) {
+        return searchItem -> {
+            if (!searchItem.isDisabled()) {
                 selectCustomOption(searchItem);
+            } else {
+                getView().showDisabledPaymentMethodDetailDialog();
             }
         };
     }
@@ -414,5 +413,35 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
 
     private boolean isDiscountAvailable() {
         return discountRepository.getCurrentConfiguration().getDiscount() != null;
+    }
+
+    private void updateCustomSearchItemsStatus(@NonNull final List<CustomSearchItem> items) {
+        for (final CustomSearchItem item : items) {
+            if (shouldDisableCustomSearchItem(item)) {
+                item.setDisabled(true);
+            } else {
+                item.setDisabled(false);
+            }
+        }
+
+        CustomSearchItem.orderListByAvailability(items);
+    }
+
+    private boolean shouldDisableCustomSearchItem(@NonNull final CustomSearchItem item) {
+        if (userSelectionRepository.shouldDisableLastPaymentMethodSelected()) {
+            final PaymentMethod lastPaymentMethodSelected = userSelectionRepository.getLastPaymentMethodSelected();
+            final String id;
+            if (lastPaymentMethodSelected != null) {
+                if (PaymentTypes.isCardPaymentType(lastPaymentMethodSelected.getPaymentTypeId())) {
+                    final Card lastCardSelected = userSelectionRepository.getLastCardSelected();
+                    id = lastCardSelected != null ? lastCardSelected.getId() : TextUtil.EMPTY;
+                } else {
+                    id = lastPaymentMethodSelected.getId();
+                }
+
+                return TextUtil.isNotEmpty(item.getId()) && item.getId().equals(id);
+            }
+        }
+        return false;
     }
 }
