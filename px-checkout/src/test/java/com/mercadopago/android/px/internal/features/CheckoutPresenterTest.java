@@ -321,7 +321,7 @@ public class CheckoutPresenterTest {
     public void whenPaymentIsCanceledBecauseUserWantsToSelectOtherPaymentMethodThenShowPaymentMethodSelection() {
         final CheckoutPresenter presenter = getPresenter();
 
-        presenter.onChangePaymentMethod();
+        presenter.onChangePaymentMethod(false);
 
         verify(checkoutView).transitionOut();
         verify(checkoutView).showPaymentMethodSelection();
@@ -335,7 +335,7 @@ public class CheckoutPresenterTest {
         when(paymentRepository.getPayment()).thenReturn(mock(Payment.class));
         when(internalConfiguration.shouldExitOnPaymentMethodChange()).thenReturn(true);
 
-        presenter.onChangePaymentMethod();
+        presenter.onChangePaymentMethod(false);
 
         verify(checkoutView).transitionOut();
         verify(checkoutView)
@@ -347,7 +347,7 @@ public class CheckoutPresenterTest {
         final CheckoutPresenter presenter = getPresenter();
         when(internalConfiguration.shouldExitOnPaymentMethodChange()).thenReturn(true);
 
-        presenter.onChangePaymentMethod();
+        presenter.onChangePaymentMethod(false);
 
         verify(checkoutView).transitionOut();
         verify(checkoutView)

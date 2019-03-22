@@ -522,6 +522,11 @@ public class PaymentVaultPresenterTest {
             //Not yet tested
         }
 
+        @Override
+        public void showDisabledPaymentMethodDetailDialog() {
+            //Do nothing
+        }
+
         /* default */ void simulateItemSelection(final int index) {
             itemSelectionCallback.onSelected(searchItemsShown.get(index));
         }
