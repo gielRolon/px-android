@@ -40,13 +40,7 @@ public final class ResourceUtil {
 
     @DrawableRes
     public static int getIconResource(final Context context, final String id) {
-        try {
-            final PaymentMethodPlugin paymentMethodPlugin =
-                Session.getSession(context).getPluginRepository().getPlugin(id);
-            return paymentMethodPlugin.getPaymentMethodInfo(context).icon;
-        } catch (final Exception e) {
-            return getPaymentMethodIcon(context, id);
-        }
+        return getPaymentMethodIcon(context, id);
     }
 
     public static int getCardColor(final String paymentMethodId, final Context context) {

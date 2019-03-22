@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -84,6 +87,20 @@ public final class ViewUtils {
             textView.setVisibility(GONE);
         } else {
             textView.setText(text);
+        }
+    }
+
+    public static void loadOrGone(@StringRes final int resId, @NonNull final TextView textView) {
+        final CharSequence value = resId == 0 ? TextUtil.EMPTY : textView.getContext().getString(resId);
+        loadOrGone(value, textView);
+    }
+
+
+    public static void loadOrGone(@DrawableRes final int resId, final ImageView imageView) {
+        if(resId == 0){
+            imageView.setVisibility(View.GONE);
+        } else {
+            imageView.setImageResource(resId);
         }
     }
 
@@ -253,4 +270,5 @@ public final class ViewUtils {
             animation.cancel();
         }
     }
+
 }

@@ -13,9 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.core.PaymentMethodPlugin;
 import com.mercadopago.android.px.internal.adapters.PaymentMethodSearchItemAdapter;
 import com.mercadopago.android.px.internal.base.PXActivity;
 import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
@@ -24,13 +22,9 @@ import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolverImp
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.payer_information.PayerInformationActivity;
 import com.mercadopago.android.px.internal.features.uicontrollers.FontCache;
-import com.mercadopago.android.px.internal.features.uicontrollers.paymentmethodsearch.PaymentMethodInfoController;
-import com.mercadopago.android.px.internal.features.uicontrollers.paymentmethodsearch.PaymentMethodSearchCustomOption;
 import com.mercadopago.android.px.internal.features.uicontrollers.paymentmethodsearch.PaymentMethodSearchOption;
 import com.mercadopago.android.px.internal.features.uicontrollers.paymentmethodsearch.PaymentMethodSearchViewController;
-import com.mercadopago.android.px.internal.features.uicontrollers.paymentmethodsearch.PluginPaymentMethodInfo;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
-import com.mercadopago.android.px.internal.repository.PluginRepository;
 import com.mercadopago.android.px.internal.util.ErrorUtil;
 import com.mercadopago.android.px.internal.util.JsonUtil;
 import com.mercadopago.android.px.internal.util.ScaleUtil;
@@ -39,12 +33,12 @@ import com.mercadopago.android.px.internal.view.AmountView;
 import com.mercadopago.android.px.internal.view.DiscountDetailDialog;
 import com.mercadopago.android.px.internal.view.GridSpacingItemDecoration;
 import com.mercadopago.android.px.internal.view.MPTextView;
+import com.mercadopago.android.px.internal.viewmodel.PaymentMethodViewModel;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CustomSearchItem;
 import com.mercadopago.android.px.model.DiscountConfigurationModel;
 import com.mercadopago.android.px.model.Issuer;
 import com.mercadopago.android.px.model.PaymentMethod;
-import com.mercadopago.android.px.model.PaymentMethodInfo;
 import com.mercadopago.android.px.model.PaymentMethodSearchItem;
 import com.mercadopago.android.px.model.Site;
 import com.mercadopago.android.px.model.Token;
@@ -53,10 +47,8 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.tracking.internal.events.FrictionEventTracker;
 import com.mercadopago.android.px.tracking.internal.views.SelectMethodView;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static com.mercadopago.android.px.core.MercadoPagoCheckout.EXTRA_ERROR;
@@ -88,6 +80,7 @@ public class PaymentVaultActivity extends PXActivity<PaymentVaultPresenter> impl
     protected View mProgressLayout;
 
     private AmountView amountView;
+    private PaymentMethodSearchItemAdapter groupsAdapter;
 
     public static void start(@NonNull final AppCompatActivity from) {
         final Intent intent = new Intent(from, PaymentVaultActivity.class);
@@ -121,7 +114,6 @@ public class PaymentVaultActivity extends PXActivity<PaymentVaultPresenter> impl
         configurePresenter();
         setContentView();
         initializeControls();
-        cleanPaymentMethodOptions();
 
         //Avoid automatic selection if activity restored on back pressed from next step
         initialize();
@@ -216,29 +208,8 @@ public class PaymentVaultActivity extends PXActivity<PaymentVaultPresenter> impl
         mSearchItemsRecyclerView.setLayoutManager(new GridLayoutManager(this, columns));
         mSearchItemsRecyclerView.addItemDecoration(
             new GridSpacingItemDecoration(columns, ScaleUtil.getPxFromDp(COLUMN_SPACING_DP_VALUE, this), true));
-        final PaymentMethodSearchItemAdapter groupsAdapter = new PaymentMethodSearchItemAdapter();
+        groupsAdapter = new PaymentMethodSearchItemAdapter();
         mSearchItemsRecyclerView.setAdapter(groupsAdapter);
-    }
-
-    protected void populateSearchList(final Iterable<PaymentMethodSearchItem> items,
-        final OnSelectedCallback<PaymentMethodSearchItem> onSelectedCallback) {
-        final PaymentMethodSearchItemAdapter adapter =
-            (PaymentMethodSearchItemAdapter) mSearchItemsRecyclerView.getAdapter();
-        final List<PaymentMethodSearchViewController> customViewControllers =
-            createSearchItemsViewControllers(items, onSelectedCallback);
-        adapter.addItems(customViewControllers);
-        adapter.notifyItemInserted();
-    }
-
-    @Deprecated
-    private void populateCustomOptionsList(final Iterable<CustomSearchItem> customSearchItems,
-        final OnSelectedCallback<CustomSearchItem> onSelectedCallback) {
-        final PaymentMethodSearchItemAdapter adapter =
-            (PaymentMethodSearchItemAdapter) mSearchItemsRecyclerView.getAdapter();
-        final List<PaymentMethodSearchViewController> customViewControllers =
-            createCustomSearchItemsViewControllers(customSearchItems, onSelectedCallback);
-        adapter.addItems(customViewControllers);
-        adapter.notifyItemInserted();
     }
 
     private List<PaymentMethodSearchViewController> createSearchItemsViewControllers(
@@ -251,40 +222,6 @@ public class PaymentVaultActivity extends PXActivity<PaymentVaultPresenter> impl
             customViewControllers.add(viewController);
         }
         return customViewControllers;
-    }
-
-    @Deprecated
-    private List<PaymentMethodSearchViewController> createCustomSearchItemsViewControllers(
-        final Iterable<CustomSearchItem> customSearchItems,
-        final OnSelectedCallback<CustomSearchItem> onSelectedCallback) {
-        final List<PaymentMethodSearchViewController> customViewControllers = new ArrayList<>();
-        for (final CustomSearchItem item : customSearchItems) {
-            final PaymentMethodSearchCustomOption viewController = new PaymentMethodSearchCustomOption(this, item);
-            viewController.setOnClickListener(v -> onSelectedCallback.onSelected(item));
-
-            customViewControllers.add(viewController);
-        }
-        return customViewControllers;
-    }
-
-    private List<PaymentMethodSearchViewController> createPluginItemsViewControllers(
-        final Iterable<PaymentMethodInfo> infoItems) {
-        final PluginRepository pluginRepository = Session.getSession(this).getPluginRepository();
-        final List<PaymentMethodSearchViewController> controllers = new ArrayList<>();
-        for (final PaymentMethodInfo infoItem : infoItems) {
-            final PaymentMethodPlugin plugin = pluginRepository.getPlugin(infoItem.getId());
-            if (plugin.isEnabled()) {
-                final PluginPaymentMethodInfo pluginPaymentMethodInfo = new PluginPaymentMethodInfo(infoItem);
-                final PaymentMethodSearchViewController viewController =
-                    new PaymentMethodInfoController(this, pluginPaymentMethodInfo);
-                viewController.setOnClickListener(v -> {
-                    final String id = String.valueOf(v.getTag());
-                    presenter.selectPluginPaymentMethod(pluginRepository.getPlugin(id));
-                });
-                controllers.add(viewController);
-            }
-        }
-        return controllers;
     }
 
     @Override
@@ -388,13 +325,6 @@ public class PaymentVaultActivity extends PXActivity<PaymentVaultPresenter> impl
     }
 
     @Override
-    public void cleanPaymentMethodOptions() {
-        final PaymentMethodSearchItemAdapter adapter =
-            (PaymentMethodSearchItemAdapter) mSearchItemsRecyclerView.getAdapter();
-        adapter.clear();
-    }
-
-    @Override
     public void finishPaymentMethodSelection(final PaymentMethod paymentMethod) {
         finishWith(paymentMethod);
     }
@@ -432,6 +362,12 @@ public class PaymentVaultActivity extends PXActivity<PaymentVaultPresenter> impl
     }
 
     @Override
+    public void showSearchItems(final List<PaymentMethodViewModel> searchItems) {
+        groupsAdapter.setItems(searchItems);
+        groupsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void setTitle(final String title) {
         if (mAppBarLayout != null) {
             mAppBarLayout.setTitle(title);
@@ -466,39 +402,6 @@ public class PaymentVaultActivity extends PXActivity<PaymentVaultPresenter> impl
         if (mActivityActive) {
             ErrorUtil.showApiExceptionError(this, apiException, requestOrigin);
         }
-    }
-
-    @Deprecated
-    @Override
-    public void showCustomOptions(final List<CustomSearchItem> customSearchItems,
-        final OnSelectedCallback<CustomSearchItem> customSearchItemOnSelectedCallback) {
-        populateCustomOptionsList(customSearchItems, customSearchItemOnSelectedCallback);
-    }
-
-    @Override
-    public void showSearchItems(final List<PaymentMethodSearchItem> searchItems,
-        final OnSelectedCallback<PaymentMethodSearchItem> paymentMethodSearchItemSelectionCallback) {
-        populateSearchList(searchItems, paymentMethodSearchItemSelectionCallback);
-    }
-
-    @Override
-    public void showPluginOptions(@NonNull final Collection<PaymentMethodPlugin> items,
-        final PaymentMethodPlugin.PluginPosition position) {
-
-        final List<PaymentMethodInfo> toInsert = new ArrayList<>();
-
-        for (final PaymentMethodPlugin plugin : items) {
-            if (position == plugin.getPluginPosition()) {
-                toInsert.add(plugin.getPaymentMethodInfo(this));
-            }
-        }
-
-        final PaymentMethodSearchItemAdapter adapter =
-            (PaymentMethodSearchItemAdapter) mSearchItemsRecyclerView.getAdapter();
-        final List<PaymentMethodSearchViewController> customViewControllers =
-            createPluginItemsViewControllers(toInsert);
-        adapter.addItems(customViewControllers);
-        adapter.notifyItemInserted();
     }
 
     @Override

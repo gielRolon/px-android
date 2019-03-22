@@ -8,6 +8,8 @@ import java.util.List;
 
 public class PaymentMethodSearchItem implements Serializable {
 
+    private static final int COMMENT_MAX_LENGTH = 75;
+
     private static final String TYPE_PAYMENT_METHOD = "payment_method";
     private static final String TYPE_PAYMENT_TYPE = "payment_type";
     private static final String TYPE_GROUP = "group";
@@ -21,6 +23,13 @@ public class PaymentMethodSearchItem implements Serializable {
     private Boolean showIcon;
     @DrawableRes
     private int icon;
+
+    public boolean hasToShowComment() {
+        return (!(id.equals(PaymentTypes.CREDIT_CARD) ||
+            id.equals(PaymentTypes.DEBIT_CARD) ||
+            id.equals(PaymentTypes.PREPAID_CARD))) && hasComment() &&
+            comment.length() < COMMENT_MAX_LENGTH;
+    }
 
     public PaymentMethodSearchItem() {
     }

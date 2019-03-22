@@ -402,8 +402,6 @@ public class PaymentVaultPresenterTest {
         verify(view, atLeastOnce()).showAmount(discountRepository.getCurrentConfiguration(),
                 paymentSettingRepository.getCheckoutPreference().getTotalAmount(),
                 paymentSettingRepository.getCheckoutPreference().getSite());
-        verify(view, atLeastOnce())
-                .showPluginOptions(any(Collection.class), any(PaymentMethodPlugin.PluginPosition.class));
         verify(view, atLeastOnce()).hideProgress();
     }
 
@@ -453,12 +451,6 @@ public class PaymentVaultPresenterTest {
                                       final OnSelectedCallback<CustomSearchItem> customSearchItemOnSelectedCallback) {
             customOptionsShown = customSearchItems;
             customItemSelectionCallback = customSearchItemOnSelectedCallback;
-        }
-
-        @Override
-        public void showPluginOptions(final Collection<PaymentMethodPlugin> items,
-                                      final PaymentMethodPlugin.PluginPosition position) {
-            //Not yet tested
         }
 
         @Override

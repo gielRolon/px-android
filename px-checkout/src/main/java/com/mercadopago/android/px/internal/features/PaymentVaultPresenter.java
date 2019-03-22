@@ -1,14 +1,11 @@
 package com.mercadopago.android.px.internal.features;
 
 import android.support.annotation.NonNull;
-
-import com.mercadopago.android.px.core.PaymentMethodPlugin;
-import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolver;
-import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolverImpl;
+import com.mercadopago.android.px.internal.adapters.PaymentMethodSearchItemAdapter;
 import com.mercadopago.android.px.internal.base.BasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
-import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
+import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolver;
 import com.mercadopago.android.px.internal.features.uicontrollers.AmountRowController;
 import com.mercadopago.android.px.internal.navigation.DefaultPayerInformationDriver;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
@@ -18,6 +15,8 @@ import com.mercadopago.android.px.internal.repository.PluginRepository;
 import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.internal.util.TextUtil;
 import com.mercadopago.android.px.internal.view.AmountView;
+import com.mercadopago.android.px.internal.viewmodel.PaymentMethodViewModel;
+import com.mercadopago.android.px.internal.viewmodel.mappers.CustomSearchOptionViewModelMapper;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CustomSearchItem;
 import com.mercadopago.android.px.model.DiscountConfigurationModel;
@@ -31,7 +30,6 @@ import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.services.Callback;
 import com.mercadopago.android.px.tracking.internal.views.SelectMethodChildView;
 import com.mercadopago.android.px.tracking.internal.views.SelectMethodView;
-import java.util.Collection;
 import java.util.List;
 
 public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> implements AmountView.OnClick,
@@ -59,12 +57,12 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
     private AmountRowController amountRowController;
 
     public PaymentVaultPresenter(@NonNull final PaymentSettingRepository paymentSettingRepository,
-                                 @NonNull final UserSelectionRepository userSelectionRepository,
-                                 @NonNull final PluginRepository pluginService,
-                                 @NonNull final DiscountRepository discountRepository,
-                                 @NonNull final GroupsRepository groupsRepository,
-                                 @NonNull final MercadoPagoESC mercadoPagoESC,
-                                 @NonNull final PaymentVaultTitleSolver titleSolver) {
+        @NonNull final UserSelectionRepository userSelectionRepository,
+        @NonNull final PluginRepository pluginService,
+        @NonNull final DiscountRepository discountRepository,
+        @NonNull final GroupsRepository groupsRepository,
+        @NonNull final MercadoPagoESC mercadoPagoESC,
+        @NonNull final PaymentVaultTitleSolver titleSolver) {
         this.paymentSettingRepository = paymentSettingRepository;
         this.userSelectionRepository = userSelectionRepository;
         pluginRepository = pluginService;
@@ -99,7 +97,8 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
             @Override
             public void failure(final ApiException apiException) {
                 getView()
-                    .showError(MercadoPagoError.createNotRecoverable(apiException, ApiException.ErrorCodes.PAYMENT_METHOD_NOT_FOUND),
+                    .showError(MercadoPagoError
+                            .createNotRecoverable(apiException, ApiException.ErrorCodes.PAYMENT_METHOD_NOT_FOUND),
                         ApiException.ErrorCodes.PAYMENT_METHOD_NOT_FOUND);
                 setFailureRecovery(new FailureRecovery() {
                     @Override
@@ -131,8 +130,8 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
     @Override
     public void showAmountRow() {
         getView().showAmount(discountRepository.getCurrentConfiguration(),
-                paymentSettingRepository.getCheckoutPreference().getTotalAmount(),
-                paymentSettingRepository.getCheckoutPreference().getSite());
+            paymentSettingRepository.getCheckoutPreference().getTotalAmount(),
+            paymentSettingRepository.getCheckoutPreference().getSite());
     }
 
     @Override
@@ -177,7 +176,7 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
     private void showSelectedItemChildren() {
         trackScreen();
         getView().setTitle(selectedSearchItem.getChildrenHeader());
-        getView().showSearchItems(selectedSearchItem.getChildren(), getPaymentMethodSearchItemSelectionCallback());
+        //getView().showSearchItems(PaymentMethodSearchItemAdapter.Perro.create(selectedSearchItem.getChildren()));
         getView().hideProgress();
     }
 
@@ -185,9 +184,7 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
         if (noPaymentMethodsAvailable()) {
             getView().showEmptyPaymentMethodsError();
         } else if (isOnlyOneItemAvailable() && !isDiscountAvailable()) {
-            if (pluginRepository.hasEnabledPaymentMethodPlugin()) {
-                selectPluginPaymentMethod(pluginRepository.getFirstEnabledPlugin());
-            } else if (!paymentMethodSearch.getGroups().isEmpty()) {
+            if (!paymentMethodSearch.getGroups().isEmpty()) {
                 selectItem(paymentMethodSearch.getGroups().get(0), true);
             } else if (!paymentMethodSearch.getCustomSearchItems().isEmpty()) {
                 if (PaymentTypes.CREDIT_CARD.equals(paymentMethodSearch.getCustomSearchItems().get(0).getType())) {
@@ -198,10 +195,6 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
             showAvailableOptions();
             getView().hideProgress();
         }
-    }
-
-    private void selectItem(final PaymentMethodSearchItem item) {
-        selectItem(item, false);
     }
 
     private void selectItem(final PaymentMethodSearchItem item, final Boolean automaticSelection) {
@@ -217,42 +210,11 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
     }
 
     private void showAvailableOptions() {
-        final Collection<PaymentMethodPlugin> paymentMethodPluginList =
-            pluginRepository.getEnabledPlugins();
-
-        getView().showPluginOptions(paymentMethodPluginList, PaymentMethodPlugin.PluginPosition.TOP);
-
-        if (paymentMethodSearch.hasCustomSearchItems()) {
-            final List<CustomSearchItem> shownCustomItems;
-            shownCustomItems = paymentMethodSearch.getCustomSearchItems();
-            getView().showCustomOptions(shownCustomItems, getCustomOptionCallback());
-        }
-
-        if (searchItemsAvailable()) {
-            getView().showSearchItems(paymentMethodSearch.getGroups(), getPaymentMethodSearchItemSelectionCallback());
-        }
-
+        final List<PaymentMethodViewModel> perros =
+            new CustomSearchOptionViewModelMapper().map(paymentMethodSearch.getCustomSearchItems());
+        //perros.addAll(PaymentMethodSearchItemAdapter.Perro.create(paymentMethodSearch.getGroups()));
+        getView().showSearchItems(perros);
         trackScreen();
-
-        getView().showPluginOptions(paymentMethodPluginList, PaymentMethodPlugin.PluginPosition.BOTTOM);
-    }
-
-    private OnSelectedCallback<PaymentMethodSearchItem> getPaymentMethodSearchItemSelectionCallback() {
-        return new OnSelectedCallback<PaymentMethodSearchItem>() {
-            @Override
-            public void onSelected(PaymentMethodSearchItem item) {
-                selectItem(item);
-            }
-        };
-    }
-
-    private OnSelectedCallback<CustomSearchItem> getCustomOptionCallback() {
-        return new OnSelectedCallback<CustomSearchItem>() {
-            @Override
-            public void onSelected(final CustomSearchItem searchItem) {
-                selectCustomOption(searchItem);
-            }
-        };
     }
 
     private void selectCustomOption(final CustomSearchItem item) {
@@ -296,8 +258,8 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
         final String itemId = item.getId();
 
         if (PaymentTypes.isCardPaymentType(itemId)) {
-                userSelectionRepository.select(itemId);
-                getView().startCardFlow(automaticSelection);
+            userSelectionRepository.select(itemId);
+            getView().startCardFlow(automaticSelection);
         } else {
             getView().startPaymentMethodsSelection(
                 paymentSettingRepository.getCheckoutPreference().getPaymentPreference());
@@ -346,29 +308,21 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
         return groupCount + customCount + pluginCount == 1;
     }
 
-    private boolean searchItemsAvailable() {
-        return paymentMethodSearch != null && paymentMethodSearch.getGroups() != null
-            && (!paymentMethodSearch.getGroups().isEmpty() || pluginRepository.hasEnabledPaymentMethodPlugin());
-    }
-
     private boolean noPaymentMethodsAvailable() {
-        return (paymentMethodSearch.getGroups() == null || paymentMethodSearch.getGroups().isEmpty())
-            &&
-            (paymentMethodSearch.getCustomSearchItems() == null || paymentMethodSearch.getCustomSearchItems().isEmpty())
-            && !pluginRepository.hasEnabledPaymentMethodPlugin();
+        return paymentMethodSearch.getGroups().isEmpty() && paymentMethodSearch.getCustomSearchItems().isEmpty();
     }
 
     public PaymentMethodSearchItem getSelectedSearchItem() {
         return selectedSearchItem;
     }
 
-    public void setSelectedSearchItem(PaymentMethodSearchItem mSelectedSearchItem) {
+    public void setSelectedSearchItem(final PaymentMethodSearchItem mSelectedSearchItem) {
         selectedSearchItem = mSelectedSearchItem;
     }
 
     public void trackScreen() {
         // Do not remove check paymentMethodSearch, sometimes in recovery status is null.
-        if(paymentMethodSearch != null) {
+        if (paymentMethodSearch != null) {
             if (selectedSearchItem == null) {
                 trackInitialScreen();
             } else {
@@ -403,16 +357,6 @@ public class PaymentVaultPresenter extends BasePresenter<PaymentVaultView> imple
     @Override
     public void onDetailClicked(@NonNull final DiscountConfigurationModel discountModel) {
         getView().showDetailDialog(discountModel);
-    }
-
-    public void selectPluginPaymentMethod(final PaymentMethodPlugin plugin) {
-        userSelectionRepository
-            .select(pluginRepository.getPluginAsPaymentMethod(plugin.getId(), PaymentTypes.PLUGIN), null);
-        onPluginAfterHookOne();
-    }
-
-    public void onPluginAfterHookOne() {
-        getView().finishPaymentMethodSelection(userSelectionRepository.getPaymentMethod());
     }
 
     public void onPaymentMethodReturned() {

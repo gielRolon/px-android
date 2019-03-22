@@ -15,7 +15,7 @@ import com.mercadopago.android.px.model.PaymentTypes;
 
 public class PaymentMethodSearchOption implements PaymentMethodSearchViewController {
 
-    private static final int COMMENT_MAX_LENGTH = 75;
+
 
     protected PaymentMethodSearchItem mItem;
     protected Context mContext;
@@ -47,15 +47,7 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
 
     @Override
     public void initializeControls() {
-        mDescription = mView.findViewById(R.id.mpsdkDescription);
-        mComment = mView.findViewById(R.id.mpsdkComment);
-        mIcon = mView.findViewById(R.id.mpsdkImage);
-    }
 
-    private boolean hasToShowComment(PaymentMethodSearchItem item) {
-        return (!(item.getId().equals(PaymentTypes.CREDIT_CARD) ||
-            item.getId().equals(PaymentTypes.DEBIT_CARD) ||
-            item.getId().equals(PaymentTypes.PREPAID_CARD)));
     }
 
     @Override
@@ -66,7 +58,7 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
         } else {
             mDescription.setVisibility(View.GONE);
         }
-        if (hasToShowComment(mItem) && mItem.hasComment() && mItem.getComment().length() < COMMENT_MAX_LENGTH) {
+        if (mItem.hasToShowComment()) {
             mComment.setText(mItem.getComment());
         }
 
@@ -90,11 +82,6 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
             mIcon.setImageResource(resourceId);
         } else {
             mIcon.setVisibility(View.GONE);
-        }
-
-        if (needsTint) {
-            mIcon.setColorFilter(ContextCompat.getColor(mContext, R.color.px_paymentMethodTint),
-                PorterDuff.Mode.MULTIPLY);
         }
     }
 
